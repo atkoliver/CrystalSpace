@@ -10,7 +10,6 @@
 general:
   enabled: 'Enabled version {version}.'
   disabled: 'Disabled version {version}.'
-  usagestats: 'The plugin will now start sending usage stats. You can disable this plugins/PluginMetrics/config.yml!'
   configload: 'Generated {configfile} file.'
   configupdatestart: 'Starting to update a configuration file.'
   configupdatefinish: ' One of your configuration files was succesfully updated.'

@@ -42,15 +42,6 @@ public class SpaceLangHandler {
     }
 
     /**
-     * Gets the 'now sending usage stats'-message.
-     * 
-     * @return Localized usage stats message
-     */
-    public static String getUsageStatsMessage() {
-        return SpaceConfig.getConfig(SpaceConfig.ConfigFile.LANG).getString("general.usagestats");
-    }
-
-    /**
      * Gets the config loaded message.
      * 
      * @param configfile ConfigFile that was loaded

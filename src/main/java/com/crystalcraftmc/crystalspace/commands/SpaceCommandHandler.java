@@ -59,7 +59,7 @@ public class SpaceCommandHandler implements CommandExecutor {
             MessageHandler.debugPrint(Level.INFO, "An unknown person tried to use the command. (sorry if it's you, console!)");
             return true;
         }
-        Player player = (Player) sender;
+        //unused, delete: Player player = (Player) sender;
         if (args.length == 1 && args[0].equalsIgnoreCase("enter")) {
             // SpaceEnterCommand, 1 argument
             SpaceEnterCommand enterCommand = new SpaceEnterCommand(plugin, sender, args);

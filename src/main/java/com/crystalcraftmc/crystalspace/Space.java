@@ -154,7 +154,6 @@ public class Space extends JavaPlugin {
         }
 
         // Finishing up enablation.
-        MessageHandler.print(Level.INFO, LangHandler.getUsageStatsMessage());
         MessageHandler.print(Level.INFO, LangHandler.getEnabledMessage());
     }
 
