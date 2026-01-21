@@ -426,37 +426,30 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     /**
      * Loads allowed blocks
      */
+    private static void loadAllowedBlockList(Map<Set<MaterialData>, Float> blockList, List<String> readList){
+        for (String s : readList) {
+            String[] sSplit = s.replaceAll("\\s","").split("-");
+            String[] matList = sSplit[0].split(",");
+            Set<MaterialData> matDatas = toSet(matList);
+            float value;
+            if (sSplit.length == 2) {
+                value = Float.valueOf(sSplit[1]);
+            } else {
+                value = 1.0f;
+            }
+            blockList.put(matDatas, value);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void loadAllowedBlocks() {
         allowedCoreIds = new HashMap<Set<MaterialData>, Float>();
+        loadAllowedBlockList(allowedCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
         allowedShellIds = new HashMap<Set<MaterialData>, Float>();
-        for (String s : SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores")) {
-            String[] sSplit = s.replaceAll("\\s","").split("-");
-            String[] matList = sSplit[0].split(",");
-            Set<MaterialData> matDatas = toSet(matList);
-            float value;
-            if (sSplit.length == 2) {
-                value = Float.valueOf(sSplit[1]);
-            } else {
-                value = 1.0f;
-            }
-            allowedCoreIds.put(matDatas, value);
-            MessageHandler.debugPrint(Level.INFO, "allowedCoreIds has " + allowedCoreIds.size() + " entries");
-        }
+        loadAllowedBlockList(allowedShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
 
-        for (String s : SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells")) {
-            String[] sSplit = s.replaceAll("\\s","").split("-");
-            String[] matList = sSplit[0].split(",");
-            Set<MaterialData> matDatas = toSet(matList);
-            float value;
-            if (sSplit.length == 2) {
-                value = Float.valueOf(sSplit[1]);
-            } else {
-                value = 1.0f;
-            }
-            allowedShellIds.put(matDatas, value);
-            MessageHandler.debugPrint(Level.INFO, "allowedShellIds has " + allowedShellIds.size() + " entries");
-        }
+        MessageHandler.debugPrint(Level.INFO, "allowedCoreIds has " + allowedCoreIds.size() + " entries\n"
+                                            + "allowedShellIds has " + allowedShellIds.size() + " entries");
     }
 
     private static Set<MaterialData> toSet(String[] matList) {

@@ -3,10 +3,10 @@
 
 name: CrystalSpace
 main: com.crystalcraftmc.crystalspace.Space
-version: 3.0.0-ALPHA-5
-authors: [kitskub, iffa, SwearWord, HACKhalo2, Canis85, BR, jflory7, Jacc734, Jwood9198]
-website: https://github.com/CrystalCraftMC/CrystalSpace
-jenkins-url: http://ci.crystalcraftmc.com/job/CrystalSpace/
+version: 3.0.0-BETA-1
+authors: [kitskub, iffa, SwearWord, HACKhalo2, Canis85, BR, jflory7, Jacc734, Jwood9198, atkoliver ]
+website: https://github.com/atkoliver/CrystalSpace
+# jenkins-url:
 
 # Load on startup for bukkit.yml, and all that support
 load: startup

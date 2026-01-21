@@ -24,9 +24,8 @@ dependencies {
 }
 
 group = "com.crystalcraftmc.crystalspace"
-version = "1.10-R0.1-SNAPSHOT"
+version = "1.21"
 description = "CrystalSpace"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
     publications.create<MavenPublication>("maven") {
