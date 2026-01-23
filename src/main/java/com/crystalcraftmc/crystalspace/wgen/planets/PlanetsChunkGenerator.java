@@ -37,8 +37,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
  */
 public class PlanetsChunkGenerator extends ChunkGenerator {
     // Variables
-    private Map<Set<MaterialData>, Float> allowedShellIds;
-    private Map<Set<MaterialData>, Float> allowedCoreIds;
+    private Map<Set<MaterialData>, Float> possibleShellIds;
+    private Map<Set<MaterialData>, Float> possibleCoreIds;
     private int density = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("density", (Integer) SpaceConfig.Defaults.DENSITY.getDefault()); // Number of planetoids it will try to create per
     private int minSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("minSize", (Integer) SpaceConfig.Defaults.MIN_SIZE.getDefault()); // Minimum radius
     private int maxSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("maxSize", (Integer) SpaceConfig.Defaults.MAX_SIZE.getDefault()); // Maximum radius
@@ -69,7 +69,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     public PlanetsChunkGenerator(String id, boolean generate) {
         this.ID = id.toLowerCase();
         this.GENERATE = generate;
-        loadAllowedBlocks();
+        loadPossibleBlocks();
         loadPlanetSettings();
     }
 
@@ -302,8 +302,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 //            seed = -seed;
 //        }
 
-
-
         // If x and Z are zero, generate a log/leaf planet close to 0,0
         if (x == 0 && z == 0) {
             Planetoid spawnPl = new Planetoid();
@@ -334,27 +332,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         for (int i = 0; i < density; i++) {
             // Try to make a planet
             Planetoid curPl = new Planetoid();
-            curPl.shellBlkIds = getBlockTypes(rand, false, true);
-            //boolean noHeat = false;
-            outer:
-            for (MaterialData d : curPl.shellBlkIds) {//Circumstances
-                if (d.getItemType() == null) {//Not vanilla
-                    continue;//Don't care
-                }
-                switch (d.getItemType()) {
-                    case LEAVES:
-                        curPl.coreBlkIds = new HashSet<MaterialData>(Collections.singleton(new MaterialData(Material.LOG)));//If there's any leaves, only use wood
-                        break outer;
-                    case ICE:
-                        curPl.coreBlkIds = new HashSet<MaterialData>(Collections.singleton(new MaterialData(Material.WATER)));// If there's ice, use water? Not final
-                        break outer;
-                    case WOOL:
-                        curPl.coreBlkIds = getBlockTypes(rand, true, true);
-                        break outer;
-                    default:
-                        curPl.coreBlkIds = getBlockTypes(rand, true, false);
-                }
-            }
+            curPl.shellBlkIds = getShellBlocks(rand);
+            curPl.coreBlkIds = getCoreBlocks(rand);
 
             curPl.shellThickness = rand.nextInt(maxShellSize - minShellSize) + minShellSize;
             curPl.radius = rand.nextInt(maxSize - minSize) + minSize;
@@ -362,8 +341,11 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             // Set position
             curPl.xPos = (x * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
             int randInt = world.getMaxHeight() - curPl.radius * 2 - floorHeight;
-            curPl.yPos = rand.nextInt(randInt >= 0 ? randInt : 0) + curPl.radius;
+            curPl.yPos = rand.nextInt(randInt >= 0 ? randInt : 0) + curPl.radius + floorHeight;
             curPl.zPos = (z * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
+
+            // TODO: Check if this can be optimized.
+            // How large can the 'planetoids' list become?
 
             // Created a planet, check for collisions with existing planets
             // If any collision, discard planet
@@ -396,7 +378,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             }
         }
         planets.get(world).addAll(planetoids);
-
     }
 
     @Override
@@ -424,35 +405,21 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Loads allowed blocks
+     * load possible blocks for planet generation
      */
-    private static void loadBlockList(Map<Set<MaterialData>, Float> blockList, List<String> readList){
-        for (String s : readList) {
-            String[] sSplit = s.replaceAll("\\s","").split("-");
-            String[] matList = sSplit[0].split(",");
-            Set<MaterialData> matDatas = toSet(matList);
-            float value;
-            if (sSplit.length == 2) {
-                value = Float.valueOf(sSplit[1]);
-            } else {
-                value = 1.0f;
-            }
-            blockList.put(matDatas, value);
-        }
-    }
 
     @SuppressWarnings("unchecked")
-    private void loadAllowedBlocks() {
+    private void loadPossibleBlocks() {
         try {       
-            allowedCoreIds = new HashMap<Set<MaterialData>, Float>();
-            allowedShellIds = new HashMap<Set<MaterialData>, Float>();
-            loadBlockList(allowedCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
-            loadBlockList(allowedShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
+            possibleCoreIds = new HashMap<Set<MaterialData>, Float>();
+            possibleShellIds = new HashMap<Set<MaterialData>, Float>();
+            readPossibleBlockList(possibleCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
+            readPossibleBlockList(possibleShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
 
-            MessageHandler.debugPrint(Level.INFO, "allowedCoreIds has " + allowedCoreIds.size() + " entries\n"
-                                                + "allowedShellIds has " + allowedShellIds.size() + " entries");
+            MessageHandler.debugPrint(Level.INFO, "possibleCoreIds has " + possibleCoreIds.size() + " entries\n"
+                                                + "possibleShellIds has " + possibleShellIds.size() + " entries");
         }
-        catch (Throwable ex){ //Throwable can be an Error OR Exception
+        catch (Exception ex){ //Throwable can be an Error OR Exception
             //TODO: Turn this into a generic "short trace log"
             MessageHandler.debugPrint(Level.WARNING, "PlanetsChunkGenerator has a problem:");
             StackTraceElement[] details = ex.getStackTrace();
@@ -463,15 +430,30 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private static Set<MaterialData> toSet(String[] matList) {
+    private static void readPossibleBlockList(Map<Set<MaterialData>, Float> possibleMap, List<String> readList){
+        for (String s : readList) {
+            String[] sSplit = s.replaceAll("\\s","").split("-");
+            String[] matList = sSplit[0].split(",");
+            Set<MaterialData> matDatas = makePossibleBlockSet(matList);
+            float value;
+            if (sSplit.length == 2) {
+                value = Float.valueOf(sSplit[1]);
+            } else {
+                value = 1.0f;
+            }
+            possibleMap.put(matDatas, value);
+        }
+    }
+
+    private static Set<MaterialData> makePossibleBlockSet(String[] matList) {
         Set<MaterialData> matDatas = new HashSet<MaterialData>();
         for (String mat : matList) {
-            int data = 0;
+            int probability = 0;
             String name = "";
             if(mat.split(":").length == 2){
                 try {
                     name = mat.split(":")[0];
-                    data = Integer.parseInt(mat.split(":")[1]);
+                    probability = Integer.parseInt(mat.split(":")[1]);
                 } catch (NumberFormatException numberFormatException) {
                     MessageHandler.print(Level.WARNING, "Invalid core block in planets.yml");
                 }
@@ -487,7 +469,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     // TODO: Non-deprecated alternative? as well as to other MaterialDatas in the source...
                     // https://bukkit.org/threads/so-block-setdata-is-deprecated-whats-the-new-way-to-change-the-data-of-an-existing-block.189076/
                     // No easy way to use a non-dprecated method ^
-                    matDatas.add(new MaterialData(newMat, (byte) data));
+                    matDatas.add(new MaterialData(newMat, (byte) probability));
                 } else {
                     MessageHandler.print(Level.WARNING, newMat.toString() + " is not a block");
                 }
@@ -495,7 +477,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             else{
                 //UNSAFE! Does not check if id represents a block
                 try {
-                    matDatas.add(new MaterialData(Integer.parseInt(name), (byte) data));
+                    matDatas.add(new MaterialData(Integer.parseInt(name), (byte) probability));
                 } catch (NumberFormatException numberFormatException) {
                     MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
                 }
@@ -503,7 +485,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
         return matDatas;
     }
-    /**
+
+    /*
      * Gets the squared distance.
      * @param pl1 Planetoid 1
      * @param pl2 Planetoid 2
@@ -522,18 +505,40 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * Returns a valid block type.
      * 
      * //@param randrandom generator to use
-     * @param core if true, searching through allowed cores, otherwise allowed shells
+     * @param core if true, searching through possible cores, otherwise possible shells
      * //@param heated if true, will not return a block that gives off heat
      * 
      * @return Material
      */
-    private Set<MaterialData> getBlockTypes(Random rand, boolean core, boolean noHeat) {
+    private Set<MaterialData> getCoreBlocks(Random rand) {
+        return getBlockTypes(rand, true);
+    }
+
+    private Set<MaterialData> getShellBlocks(Random rand) {
+        return getBlockTypes(rand, false);
+    }
+
+    private Set<MaterialData> getBlockTypesNew(Random rand, Map<Set<MaterialData>, Float> refMap) {
+        //What does this code do?
+        //Rand is generated in planetoids and passed to here
+        Set<MaterialData> retVal = null;
+
+        Set<MaterialData> dataList = new ArrayList<Set<MaterialData>>(refMap.keySet()).get(rand.nextInt(refMap.size()));
+       
+        float testVal = rand.nextFloat();
+        if (refMap.get(dataList) > testVal) {
+            retVal = dataList;
+        }
+        return retVal;
+    }
+    //TODO: Replace with getBlockTypesNew above, after figuring out wtf the code above does / if replacement is safe.
+    private Set<MaterialData> getBlockTypes(Random rand, boolean core) {
         Set<MaterialData> retVal = null;
         Map<Set<MaterialData>, Float> refMap;
         if (core) {
-            refMap = allowedCoreIds;
+            refMap = possibleCoreIds;
         } else {
-            refMap = allowedShellIds;
+            refMap = possibleShellIds;
         }
         outer:
         while (retVal == null) {
@@ -541,8 +546,14 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             float testVal = rand.nextFloat();
             if (refMap.get(dataList) > testVal) {
                 retVal = dataList;
+                /*'noHeat' was an argument to this function.
+                It was used to remove fire-y blocks if the shell contained wool.
+                Removed as an undocumented and obstructive behavior. (some people may WANT wool planet that burn themselves)
+
+                Can the code below be repurposed, or should it just be deleted? */
                 for (MaterialData d : dataList) {
-                    if (noHeat) {
+                  //if (noHeat) {
+                    if (true) {
                         if(d.getItemType() == null){//Not a Vanilla Material. Don't care.
                             continue;
                         }
