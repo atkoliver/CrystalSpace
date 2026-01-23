@@ -426,7 +426,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     /**
      * Loads allowed blocks
      */
-    private static void loadAllowedBlockList(Map<Set<MaterialData>, Float> blockList, List<String> readList){
+    private static void loadBlockList(Map<Set<MaterialData>, Float> blockList, List<String> readList){
         for (String s : readList) {
             String[] sSplit = s.replaceAll("\\s","").split("-");
             String[] matList = sSplit[0].split(",");
@@ -443,13 +443,24 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 
     @SuppressWarnings("unchecked")
     private void loadAllowedBlocks() {
-        allowedCoreIds = new HashMap<Set<MaterialData>, Float>();
-        loadAllowedBlockList(allowedCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
-        allowedShellIds = new HashMap<Set<MaterialData>, Float>();
-        loadAllowedBlockList(allowedShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
+        try {       
+            allowedCoreIds = new HashMap<Set<MaterialData>, Float>();
+            allowedShellIds = new HashMap<Set<MaterialData>, Float>();
+            loadBlockList(allowedCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
+            loadBlockList(allowedShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
 
-        MessageHandler.debugPrint(Level.INFO, "allowedCoreIds has " + allowedCoreIds.size() + " entries\n"
-                                            + "allowedShellIds has " + allowedShellIds.size() + " entries");
+            MessageHandler.debugPrint(Level.INFO, "allowedCoreIds has " + allowedCoreIds.size() + " entries\n"
+                                                + "allowedShellIds has " + allowedShellIds.size() + " entries");
+        }
+        catch (Throwable ex){ //Throwable can be an Error OR Exception
+            //TODO: Turn this into a generic "short trace log"
+            MessageHandler.debugPrint(Level.WARNING, "PlanetsChunkGenerator has a problem:");
+            StackTraceElement[] details = ex.getStackTrace();
+            int fiveTraces = Math.max(0, details.length-6);
+            for (int i = details.length-1; fiveTraces < i; i-- ){
+                MessageHandler.debugPrint(Level.WARNING, details[i].getMethodName());
+            }
+        }
     }
 
     private static Set<MaterialData> toSet(String[] matList) {
