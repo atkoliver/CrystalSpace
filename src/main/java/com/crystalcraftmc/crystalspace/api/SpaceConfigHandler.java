@@ -360,40 +360,6 @@ public class SpaceConfigHandler {
         return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SpaceConfig.Defaults.SCHEMATIC_CHANCE.getDefault());
         //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SCHEMATIC_CHANCE.getDefault());
     }
-    
-
-     /**
-     * Gets the generate black holes without spout value.
-     *
-     * @param id ID
-     *
-     * @return True if generating black holes without spout
-     */
-    public static boolean getGenerateBlackHoles(String id) {
-        // TODO: clean up any leftover Spout-related naming etc.
-        if (id.equalsIgnoreCase("planets")  ) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateblackholes");
-            //return (Boolean) NONSPOUT_BLACKHOLES.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateblackholes");
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.nonspoutblackholes", (Boolean) SPOUT_BLACKHOLES.getDefault());
-    }
-
-    /**
-     * Gets the black hole chance.
-     *
-     * @param id ID
-     *
-     * @return Black hole chance
-     */
-    public static int getBlackHoleChance(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.blackholechance");
-            //return (Integer) BLACKHOLE_CHANCE.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.blackholechance");
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.blackholechance", (Integer) BLACKHOLE_CHANCE.getDefault());
-    }
 
     /**
      * Constructor of SpaceConfigHandler.

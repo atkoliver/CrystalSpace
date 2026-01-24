@@ -191,10 +191,7 @@ public class Space extends JavaPlugin {
      */
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        boolean realID = true;
-        if (id == null || id.isEmpty() || id.length() == 0) {
-            realID = false;
-        }
+        boolean realID = (id == null || id.isEmpty() || id.length() == 0) ? false : true;
         if (realID) {
             MessageHandler.debugPrint(Level.INFO, "Getting generator for '" + worldName + "' using id: '" + id + "'");
         } else {

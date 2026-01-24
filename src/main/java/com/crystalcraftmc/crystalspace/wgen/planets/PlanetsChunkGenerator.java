@@ -44,6 +44,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     private int maxSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("maxSize", (Integer) SpaceConfig.Defaults.MAX_SIZE.getDefault()); // Maximum radius
     private int minDistance = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("minDistance", (Integer) SpaceConfig.Defaults.MIN_DISTANCE.getDefault()); // Minimum distance between planets, in blocks
     private int floorHeight = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("floorHeight", (Integer) SpaceConfig.Defaults.FLOOR_HEIGHT.getDefault()); // Floor height
+    private boolean bedrockEnabled = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("bedrockEnabled", (Boolean) SpaceConfig.Defaults.BEDROCK_ENABLED.getDefault()); // Bedrock layer at y=0
     private int maxShellSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("maxShellSize", (Integer) SpaceConfig.Defaults.MAX_SHELL_SIZE.getDefault()); // Maximum shell thickness
     private int minShellSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("minShellSize", (Integer) SpaceConfig.Defaults.MIN_SHELL_SIZE.getDefault()); // Minimum shell thickness, should be at least 3
     private Material floorBlock = Material.matchMaterial(SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getString("floorBlock", (String) SpaceConfig.Defaults.FLOOR_BLOCK.getDefault()));// BlockID for the floor
@@ -72,6 +73,16 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         loadPossibleBlocks();
         loadPlanetSettings();
     }
+    /**
+     * Selects random MaterialData from blocks and returns it
+     * 
+     * @param blocks Set<MaterialData>
+     */
+    MaterialData getRandomMaterialData(Random random, Set<MaterialData> blocks) {
+        ArrayList<MaterialData> arr = new ArrayList<MaterialData>(blocks);
+        MaterialData md = arr.get(random.nextInt(arr.size())); //Example in planets.yml: "STONE,COBBLESTONE,DIRT-1.0"
+        return md;
+    }
 
     /**
      * Generates chunk data for a chunk.
@@ -83,12 +94,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @param biome
      * @return 
      */
+
     @Override
     public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
         if (!planets.containsKey(world)) {
             planets.put(world, new ArrayList<Planetoid>());
         }
-        
+        MaterialData md;
         ChunkData cData = this.createChunkData(world);
         
         if (GENERATE) {
@@ -129,22 +141,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                         yShell = true;
                                     }
                                     if (xShell || zShell || yShell) {
-                                        ArrayList<MaterialData> list = new ArrayList<MaterialData>(curPl.shellBlkIds);
-                                        MaterialData get = list.get(random.nextInt(list.size()));
-                                        cData.setBlock(chunkX, worldY, chunkZ, get);
-                                        //setBlock(retVal, chunkX, worldY, chunkZ, (byte) get.getItemTypeId());
-                                        if (get.getData() != 0) { //Has data
-                                            SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, get.getData());
-                                        }
+                                        md = getRandomMaterialData(random, curPl.shellBlkIds);
                                     } else {
-                                        ArrayList<MaterialData> list = new ArrayList<MaterialData>(curPl.coreBlkIds);
-                                        // this confuses me too much. this part is setting core blocks, right? how is it "random"?
-                                        MaterialData get = list.get(random.nextInt(list.size()));
-                                        cData.setBlock(chunkX, worldY, chunkZ, get);
-                                        //setBlock(retVal, chunkX, worldY, chunkZ, (byte) get.getItemTypeId());
-                                        if (get.getData() != 0) { //Has data
-                                            SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, get.getData());
-                                        }
+                                        md = getRandomMaterialData(random, curPl.coreBlkIds);
+                                    }
+                                    cData.setBlock(chunkX, worldY, chunkZ, md);
+                                    if (md.getData() != 0) { //Has data
+                                         SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, md.getData());
                                     }
                                 }
                             }
@@ -158,7 +161,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         for (int floorY = 0; floorY < floorHeight; floorY++) {
             for (int floorX = 0; floorX < 16; floorX++) {
                 for (int floorZ = 0; floorZ < 16; floorZ++) {
-                    if (floorY == 0) {
+                    if (bedrockEnabled == true && floorY == 0) {
                         cData.setBlock(floorX, floorY, floorZ, Material.BEDROCK);
                         //setBlock(retVal, floorX, floorY, floorZ, (byte) Material.BEDROCK.getId());
                     } else {
@@ -170,8 +173,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
         return cData;
     }
-    
-    
 
     /**
      * Generates a world.
@@ -189,6 +190,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         if (!planets.containsKey(world)) {
             planets.put(world, new ArrayList<Planetoid>());
         }
+        MaterialData md;
         byte[][] retVal = new byte[world.getMaxHeight() / 16][];
 
         if (GENERATE) {
@@ -228,20 +230,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                         yShell = true;
                                     }
                                     if (xShell || zShell || yShell) {
-                                        ArrayList<MaterialData> list = new ArrayList<MaterialData>(curPl.shellBlkIds);
-                                        MaterialData get = list.get(random.nextInt(list.size()));
-                                        setBlock(retVal, chunkX, worldY, chunkZ, (byte) get.getItemTypeId());
-                                        if (get.getData() != 0) { //Has data
-                                            SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, get.getData());
-                                        }
+                                        md = getRandomMaterialData(random, curPl.shellBlkIds);
                                     } else {
-                                        ArrayList<MaterialData> list = new ArrayList<MaterialData>(curPl.coreBlkIds);
-                                        // this confuses me too much. this part is setting core blocks, right? how is it "random"?
-                                        MaterialData get = list.get(random.nextInt(list.size()));
-                                        setBlock(retVal, chunkX, worldY, chunkZ, (byte) get.getItemTypeId());
-                                        if (get.getData() != 0) { //Has data
-                                            SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, get.getData());
-                                        }
+                                        md = getRandomMaterialData(random, curPl.coreBlkIds);
+                                    }
+                                    setBlock(retVal, chunkX, worldY, chunkZ, (byte) md.getItemTypeId());
+                                    if (md.getData() != 0) { //Has data
+                                         SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, md.getData());
                                     }
                                 }
                             }
@@ -391,9 +386,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
         if (ConfigHandler.getGenerateSchematics(ID)) {
             populators.add(new SpaceSchematicPopulator());
-        }
-        else if (ConfigHandler.getGenerateBlackHoles(ID)){
-            populators.add(new SpaceBlackHolePopulator());
         }
         populators.add(new SpaceDataPopulator());
         
@@ -616,20 +608,20 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         try {
             YamlConfiguration config = new YamlConfiguration();
             config.load(new File(Bukkit.getPluginManager().getPlugin("CrystalSpace").getDataFolder(), "planets/" + ConfigHandler.getPlanetsFile(ID)));
+
             density = config.getInt("density", (Integer) SpaceConfig.Defaults.DENSITY.getDefault()); // Number of planetoids it will try to create per
             minSize = config.getInt("minSize", (Integer) SpaceConfig.Defaults.MIN_SIZE.getDefault()); // Minimum radius
             maxSize = config.getInt("maxSize", (Integer) SpaceConfig.Defaults.MAX_SIZE.getDefault()); // Maximum radius
             minDistance = config.getInt("minDistance", (Integer) SpaceConfig.Defaults.MIN_DISTANCE.getDefault()); // Minimum distance between planets, in blocks
             floorHeight = config.getInt("floorHeight", (Integer) SpaceConfig.Defaults.FLOOR_HEIGHT.getDefault()); // Floor height
+            bedrockEnabled = config.getBoolean("bedrockEnabled", (Boolean) SpaceConfig.Defaults.BEDROCK_ENABLED.getDefault()); // Bedrock layer at y=0
             maxShellSize = config.getInt("maxShellSize", (Integer) SpaceConfig.Defaults.MAX_SHELL_SIZE.getDefault()); // Maximum shell thickness
             minShellSize = config.getInt("minShellSize", (Integer) SpaceConfig.Defaults.MIN_SHELL_SIZE.getDefault()); // Minimum shell thickness, should be at least 3
             floorBlock = Material.matchMaterial(config.getString("floorBlock", (String) SpaceConfig.Defaults.FLOOR_BLOCK.getDefault()));// BlockID for the floor
-        } catch (IOException ex) {
+            } catch (IOException ex) {
             MessageHandler.debugPrint(Level.WARNING, "IOException when getting info for planets file for id "+ ID);
         } catch (InvalidConfigurationException ex) {
             MessageHandler.debugPrint(Level.WARNING, "InvalidConfigurationException when getting info for planets file for id "+ ID);
-        } //Just use defaults if something goes wrong
-         //Just use defaults if something goes wrong
-
+        } 
     }
 }

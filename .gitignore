@@ -92,6 +92,7 @@ release.properties
 .gradle/
 build/
 gradle/
+logs/
 
 
 ### Java template

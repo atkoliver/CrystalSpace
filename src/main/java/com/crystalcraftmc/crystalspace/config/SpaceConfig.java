@@ -250,8 +250,6 @@ public class SpaceConfig {
         SATELLITE_CHANCE(1),
         GENERATE_PLANETS(true),
         GENERATE_SCHEMATICS(true),
-        GENERATE_BLACKHOLES(true),
-        BLACKHOLE_CHANCE(8),
         SCHEMATIC_CHANCE(5),
         // ConfigFile.DEFAULT_PLANETS
         DENSITY(15000),
@@ -259,6 +257,7 @@ public class SpaceConfig {
         MAX_SIZE(20),
         MIN_DISTANCE(10),
         FLOOR_HEIGHT(0),
+        BEDROCK_ENABLED(true),
         MAX_SHELL_SIZE(5),
         MIN_SHELL_SIZE(3),
         FLOOR_BLOCK("STATIONARY_WATER");

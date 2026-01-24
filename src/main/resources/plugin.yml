@@ -34,10 +34,9 @@ permissions:
   
   # Ignores
   CrystalSpace.ignore.*:
-    description: Access to all ignore permissions (no suit check, black hole effects etc.).
+    description: Access to all ignore permissions (currently, only "ignore suit check").
     children:
       CrystalSpace.ignoresuitchecks: true
-      CrystalSpace.ignoreblackholes: true
   
   # Teleport
   CrystalSpace.teleport.*:
@@ -59,7 +58,4 @@ permissions:
     default: op
   CrystalSpace.ignoresuitchecks:
     description: Ignores all suit and helmet checks for the player.
-    default: false
-  CrystalSpace.ignoreblackholes:
-    description: Ignores all black holes (i.e. they will not suck) for the player.
     default: false

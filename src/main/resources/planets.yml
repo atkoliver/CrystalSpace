@@ -10,10 +10,11 @@
 # As this goes up, so does the potential number of planets
 density: 1000
 minDistance: 100
-bedrock: false
 floorBlock: STATIONARY_WATER
 # Alter this value if you want a floor
 floorHeight: 0
+# Sets the layer y=0 to bedrock, if a floor is used
+bedrockEnabled: true
 # Minimum & maximum planet size (radius)
 minSize: 10
 maxSize: 40
