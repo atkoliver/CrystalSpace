@@ -245,7 +245,7 @@ public class SpaceSchematicHandler {
     }
     
     private static Map<Location, Map<Material, MaterialData>> getBlocksMap(Schematic schematic, Location origin){
-        Map<Location, Map<Material, MaterialData>> toRet = new HashMap<Location, Map<Material, MaterialData>>();
+        Map<Location, Map<Material, MaterialData>> blocksMap = new HashMap<Location, Map<Material, MaterialData>>();
         for (int x = 0; x < schematic.getWidth(); ++x) {
             for (int y = 0; y < schematic.getHeight(); ++y) {
                 for (int z = 0; z < schematic.getLength(); ++z) {
@@ -258,11 +258,11 @@ public class SpaceSchematicHandler {
                     }
                     Map<Material, MaterialData> tempMap = new EnumMap<Material, MaterialData>(Material.class);
                     tempMap.put(block, blockData);
-                    toRet.put(new Location(origin.getWorld(), x, y, z), tempMap);
+                    blocksMap.put(new Location(origin.getWorld(), x, y, z), tempMap);
                 }
             }
         }
-        return toRet;
+        return blocksMap;
     }
     
     /**

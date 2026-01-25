@@ -9,7 +9,7 @@
 // Package Declaration
 package com.crystalcraftmc.crystalspace.wgen.planets;
 
-import org.bukkit.material.MaterialData;
+import org.bukkit.Material;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -23,8 +23,8 @@ import java.util.Set;
 public class Planetoid implements Serializable {
     // Variables
     private static final long serialVersionUID = 1L;
-    public Set<MaterialData> coreBlkIds;
-    public Set<MaterialData> shellBlkIds;
+    public Set<Material> coreBlkIds;
+    public Set<Material> shellBlkIds;
     public int shellThickness;
     public int radius;
     public int xPos;
@@ -48,7 +48,7 @@ public class Planetoid implements Serializable {
      * @param y Y-coord
      * @param z Z-coord
      */
-    public Planetoid(Set<MaterialData> coreID, Set<MaterialData> shellID, int shellThick, int radius, int x, int y, int z) {
+    public Planetoid(Set<Material> coreID, Set<Material> shellID, int shellThick, int radius, int x, int y, int z) {
         this.coreBlkIds = coreID;
         this.shellBlkIds = shellID;
         this.shellThickness = shellThick;

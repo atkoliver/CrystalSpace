@@ -11,6 +11,7 @@ package com.crystalcraftmc.crystalspace.wgen.populators;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.Material;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,11 @@ import java.util.Random;
  * @author kitskub
  */
 public class SpaceDataPopulator extends BlockPopulator {
-    public static Map<World, Map<WrappedCoords, Byte>> coords = new HashMap<World, Map<WrappedCoords, Byte>>();
+    public static Map<World, Map<WrappedCoords, Material>> coords = new HashMap<World, Map<WrappedCoords, Material>>();
     
-    public static void addCoords(World world, int chunkX, int chunkZ, int x, int y, int z, byte data) {
+    public static void addCoords(World world, int chunkX, int chunkZ, int x, int y, int z, Material mat) {
         if (coords.get(world) == null) {
-            coords.put(world, new HashMap<WrappedCoords, Byte>());
+            coords.put(world, new HashMap<WrappedCoords, Material>());
         }
         WrappedCoords key = new WrappedCoords();
         key.chunkX = chunkX;
@@ -33,7 +34,7 @@ public class SpaceDataPopulator extends BlockPopulator {
         key.x = x;
         key.y = y;
         key.z = z;
-        coords.get(world).put(key, data);
+        coords.get(world).put(key, mat);
     }
 
     @Override
@@ -41,7 +42,8 @@ public class SpaceDataPopulator extends BlockPopulator {
         if (coords.get(world) == null) return;
         for (WrappedCoords c : coords.get(world).keySet()) {
             if (c.chunkX == chunk.getX() && c.chunkZ == chunk.getZ()) {
-                chunk.getBlock(c.x, c.y, c.z).setData(coords.get(world).get(c));
+                chunk.getBlock(c.x, c.y, c.z).setType(coords.get(world).get(c));
+                //chunk.getBlock(c.x, c.y, c.z).setData(coords.get(world).get(c));
             }
         }
     }
