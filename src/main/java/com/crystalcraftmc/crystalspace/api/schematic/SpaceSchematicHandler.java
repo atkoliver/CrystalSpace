@@ -13,7 +13,7 @@ import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.material.MaterialData;
+import org.bukkit.material.BlockData;
 import org.bukkit.util.BlockVector;
 import org.jnbt.*;
 
@@ -51,7 +51,7 @@ public class SpaceSchematicHandler {
      * @param origin Location the schematic should be placed to
      */
     public static void placeSchematic(Schematic schematic, Location origin) {
-        Map<Location, Map<Material, MaterialData>> blocksMap = getBlocksMap(schematic, origin);
+        Map<Location, Map<Material, BlockData>> blocksMap = getBlocksMap(schematic, origin);
         Map<BlockVector, Map<String, Tag>> tileEntitiesMap = getTileEntitiesMap(schematic.getTileEntities());
 
         // Builds the schematic.
@@ -67,7 +67,7 @@ public class SpaceSchematicHandler {
      * @param tileEntitiesMap Tile Entities Map
      */
     private static void buildSchematic(Location origin, 
-            Map<Location, Map<Material, MaterialData>> blocksMap, 
+            Map<Location, Map<Material, BlockData>> blocksMap, 
             Map<BlockVector, Map<String, Tag>> tileEntitiesMap) {
         
         // Variables
@@ -82,7 +82,7 @@ public class SpaceSchematicHandler {
 
             for (Material material : blocksMap.get(location).keySet()) {
                 world.getBlockAt(originX, originY, originZ).setType(material);
-                world.getBlockAt(originX, originY, originZ).setData(blocksMap.get(location).get(material).getData());
+                world.getBlockAt(originX, originY, originZ).setBlockData(blocksMap.get(location).get(material).getData());
             }
         }
     }
@@ -97,7 +97,6 @@ public class SpaceSchematicHandler {
         }
         for (File file : files) {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".schematic")) {
-                // It is for sure a .schematic-file, but now let's see if it's valid.
                 loadSchematic(file);
             }
         }
@@ -244,19 +243,25 @@ public class SpaceSchematicHandler {
         return tileEntitiesMap;
     }
     
-    private static Map<Location, Map<Material, MaterialData>> getBlocksMap(Schematic schematic, Location origin){
-        Map<Location, Map<Material, MaterialData>> blocksMap = new HashMap<Location, Map<Material, MaterialData>>();
-        for (int x = 0; x < schematic.getWidth(); ++x) {
-            for (int y = 0; y < schematic.getHeight(); ++y) {
-                for (int z = 0; z < schematic.getLength(); ++z) {
-                    int index = y * schematic.getWidth() * schematic.getLength() + z * schematic.getWidth() + x;
+    private static Map<Location, Map<Material, BlockData>> getBlocksMap(Schematic schematic, Location origin){
+        Map<Location, Map<Material, BlockData>> blocksMap = new HashMap<Location, Map<Material, BlockData>>();
+        int width = schematic.getWidth(); int height = schematic.getHeight(); int length = schematic.getLength();
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                for (int z = 0; z < length; ++z) {
+                    int index = y * width * length + z * width + x;
                     Material block = Material.getMaterial(schematic.getBlocks()[index]);
-                    MaterialData blockData = null;
+                    BlockData blockData = null;
                     try {
-                        blockData = new MaterialData(block, schematic.getBlockData()[index]);
+                        //PROBLEM: How to construct BlockData from the (byte) data from schematic? How is (byte) data formatted?
+                        //TODO (SOLUTION?): Use schematic loader from Worledit instead. Then I'll have code that works.
+                        //blockData = new BlockData(block, schematic.getBlockData()[index]);
+                        
+                        //This is a temporary workaround. Problem: This won't copy blockdata like chest contents from schematic.
+                        blockData = block.createBlockData();
                     } catch (Exception ex) {
                     }
-                    Map<Material, MaterialData> tempMap = new EnumMap<Material, MaterialData>(Material.class);
+                    Map<Material, BlockData> tempMap = new EnumMap<Material, BlockData>(Material.class);
                     tempMap.put(block, blockData);
                     blocksMap.put(new Location(origin.getWorld(), x, y, z), tempMap);
                 }
