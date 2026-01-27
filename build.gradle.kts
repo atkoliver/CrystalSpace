@@ -24,7 +24,7 @@ dependencies {
 }
 
 group = "com.crystalcraftmc.crystalspace"
-version = "1.21"
+version = "1.21.11"
 description = "CrystalSpace"
 
 publishing {

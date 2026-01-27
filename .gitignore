@@ -94,6 +94,11 @@ build/
 gradle/
 logs/
 
+### VSCode settings
+.vscode/
+
+### Servers in debug scripts
+debug-scripts/server/
 
 ### Java template
 *.class
