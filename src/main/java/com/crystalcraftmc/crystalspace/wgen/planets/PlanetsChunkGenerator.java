@@ -78,10 +78,10 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * 
      * @param blocks Set<Material>
      */
-    Material getRandomMaterial(Random random, Set<Material> blocks) {
-        ArrayList<Material> arr = new ArrayList<Material>(blocks);
-        Material mat = arr.get(random.nextInt(arr.size())); //Example in planets.yml: "STONE,COBBLESTONE,DIRT-1.0"
-        return mat;
+    Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
+        //Example in planets.yml: "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
+        //The example 'blocks' array would then be: [STONE, COBBLESTONE, DIRT, DIRT, DIRT] (1.0 is the chance that this blocklist gets selected, after the blocklist is randomly chosen)
+        return blocks.get(random.nextInt(blocks.size()));
     }
 
     /**
@@ -194,8 +194,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 
         if (GENERATE) {
             generatePlanetoids(world, x, z);
-            // Go through the current system's planetoids and fill in this chunk as
-            // needed.
+            // Go through the current system's planetoids and fill in this chunk as needed.
             for (Planetoid curPl : planets.get(world)) {
                 // Find planet's center point relative to this chunk.
                 int relCenterX = curPl.xPos - x * 16;
@@ -303,8 +302,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             spawnPl.xPos = 7;
             spawnPl.yPos = 70;
             spawnPl.zPos = 7;
-            spawnPl.coreBlkIds = new HashSet<Material>(Collections.singleton(Material.matchMaterial("LOG")));
-            spawnPl.shellBlkIds = new HashSet<Material>(Collections.singleton(Material.matchMaterial("LEAVES")));
+            spawnPl.coreBlkIds = new ArrayList<Material>(Collections.singleton(Material.matchMaterial("LOG")));
+            spawnPl.shellBlkIds = new ArrayList<Material>(Collections.singleton(Material.matchMaterial("LEAVES")));
             spawnPl.shellThickness = 3;
             spawnPl.radius = 6;
             planets.get(world).add(spawnPl);
@@ -405,8 +404,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         try {       
             possibleCoreIds = new HashMap<Set<Material>, Float>();
             possibleShellIds = new HashMap<Set<Material>, Float>();
-            readPossibleBlockList(possibleCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
-            readPossibleBlockList(possibleShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
+            readPossibleBlockSets(possibleCoreIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.cores"));
+            readPossibleBlockSets(possibleShellIds, SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getStringList("blocks.shells"));
 
             MessageHandler.debugPrint(Level.INFO, "possibleCoreIds has " + possibleCoreIds.size() + " entries\n"
                                                 + "possibleShellIds has " + possibleShellIds.size() + " entries");
@@ -422,7 +421,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private static void readPossibleBlockList(Map<Set<Material>, Float> possibleMap, List<String> readList){
+    private static void readPossibleBlockSets(Map<Set<Material>, Float> possibleMap, List<String> readList){
         for (String s : readList) {
             String[] sSplit = s.replaceAll("\\s","").split("-");
             String[] matList = sSplit[0].split(",");
@@ -463,13 +462,17 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     MessageHandler.print(Level.WARNING, newMat.toString() + " is not a block");
                 }
             }
-            else{ //UNSAFE! Does not check if id represents a block
+                else if (ConfigHandler.getIgnoreInvalidBlockIds()) { //Do we check for bad ids? Disabled in config for modded blocks
                 try {
                     matSet.add(newMat);
                 } catch (NumberFormatException numberFormatException) {
                     MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
                 }
             }
+            else { // Bad block id! Typically a typo
+                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
+            }
+            
         }
         return matSet;
     }
@@ -498,15 +501,15 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * 
      * @return Material
      */
-    private Set<Material> getCoreBlocks(Random rand) {
-        return getBlockTypes(rand, possibleCoreIds);
+    private Set<Material> getRandomCoreBlocks(Random rand) {
+        return getBlockSet(rand, possibleCoreIds);
     }
 
-    private Set<Material> getShellBlocks(Random rand) {
-        return getBlockTypes(rand, possibleShellIds);
+    private Set<Material> getRandomShellBlocks(Random rand) {
+        return getBlockSet(rand, possibleShellIds);
     }
 
-    private Set<Material> getBlockTypes(Random rand, Map<Set<Material>, Float> possibleBlkIds) {
+    private Set<Material> getRandomBlockSet(Random rand, Map<Set<Material>, Float> possibleBlkIds) {
         Set<Material> retVal = null;
         //Select random material from possibleBlkIds
         Set<Material> planetMaterials = new ArrayList<Set<Material>>(possibleBlkIds.keySet()).get(rand.nextInt(possibleBlkIds.size()));

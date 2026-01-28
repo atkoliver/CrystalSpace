@@ -15,6 +15,8 @@ floorBlock: STATIONARY_WATER
 floorHeight: 0
 # Sets the layer y=0 to bedrock, if a floor is used
 bedrockEnabled: true
+# Enable this only if you want to use a blocks from a mod. Careful: Block typos WILL crash your server!
+ignoreInvalidBlockIds: false
 # Minimum & maximum planet size (radius)
 minSize: 10
 maxSize: 40

@@ -237,6 +237,13 @@ public class SpaceConfigHandler {
         //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".maxroomheight", (Integer) ROOM_HEIGHT.getDefault());
     }
 
+    public static getIgnoreInvalidBlockIds(String id){
+        if (id.equalsIgnoreCase("planets")) {
+            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".ignoreinvalidblockids", (Integer) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
+            //return (Integer) ROOM_HEIGHT.getDefault();
+        }
+        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".ignoreinvalidblockids", (Integer) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
+    }
     /**
      * Gets the glowstone chance of a world.
      *

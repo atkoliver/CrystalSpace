@@ -23,8 +23,8 @@ import java.util.Set;
 public class Planetoid implements Serializable {
     // Variables
     private static final long serialVersionUID = 1L;
-    public Set<Material> coreBlkIds;
-    public Set<Material> shellBlkIds;
+    public ArrayList<Material> coreBlkIds;
+    public ArrayList<Material> shellBlkIds;
     public int shellThickness;
     public int radius;
     public int xPos;
