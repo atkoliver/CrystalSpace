@@ -98,7 +98,7 @@ logs/
 .vscode/
 
 ### Servers in debug scripts
-debug-scripts/server/
+debug-scripts/server-*/
 
 ### Java template
 *.class

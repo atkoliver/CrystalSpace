@@ -17,7 +17,7 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 5005,
-            "timeout": 30000 //30s
+            "timeout": 30000, //30s
         }
     ]
 }
