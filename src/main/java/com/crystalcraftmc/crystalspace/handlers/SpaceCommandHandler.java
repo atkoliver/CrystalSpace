@@ -7,11 +7,16 @@
  */
 
 // Package Declaration
-package com.crystalcraftmc.crystalspace.commands;
+package com.crystalcraftmc.crystalspace.handlers;
 
 import com.crystalcraftmc.crystalspace.Space;
 import com.crystalcraftmc.crystalspace.api.event.misc.SpaceCommandEvent;
-import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
+import com.crystalcraftmc.crystalspace.commands.SpaceAboutCommand;
+import com.crystalcraftmc.crystalspace.commands.SpaceEnterCommand;
+import com.crystalcraftmc.crystalspace.commands.SpaceExitCommand;
+import com.crystalcraftmc.crystalspace.commands.SpaceHelpCommand;
+import com.crystalcraftmc.crystalspace.commands.SpaceListCommand;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

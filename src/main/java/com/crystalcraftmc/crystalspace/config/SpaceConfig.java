@@ -175,8 +175,7 @@ public class SpaceConfig {
         // Enums
 
         DEFAULT_PLANETS("planets.yml", "planets/planets.yml"),
-        CONFIG("config.yml", "config.yml"),
-        IDS("ids.yml", "ids.yml"),
+        IDS("worlds.yml", "worlds.yml"),
         LANG("lang.yml", "lang.yml");
         // Variables
         private String name;
@@ -217,36 +216,9 @@ public class SpaceConfig {
      * @author iffa
      */
     public enum Defaults {
-        // ConfigFile.CONFIG
-        REQUIRE_HELMET(false),
-        DEBUGGING(false),
-        REQUIRE_SUIT(false),
-        ARMOR_TYPE("iron"),
-        CLOUDS(false),
-        USE_TEXTURE_PACK(true),
-        HELMET_GIVEN(false),
-        SUIT_GIVEN(false),
-        ECONOMY_ENABLED(false),
-        //ENTER_COST(20),
-        //EXIT_COST(20),
-        //ENTER_COMMAND_COST(20),
-        //EXIT_COMMAND_COST(20),
-        GRAVITY(true),
-        STOPDROWNING(true),
-        // ConfigFile.IDS
-        // Are these handled by the world manager nowadays? Couldn't find an implementation of these in our code
-        //HOSTILE_MOBS_ALLOWED(false),
-        //NEUTRAL_MOBS_ALLOWED(true),
-        FORCE_NIGHT(true),
-        HELMET("86"),
-        CHESTPLATE("133"),
-        LEGGINGS("134"),
-        BOOTS("135"),
-        ROOM_HEIGHT(5),
-        ALLOW_WEATHER(false),
+        ASTEROIDS_ENABLED(true),
         GLOWSTONE_CHANCE(1),
         STONE_CHANCE(3),
-        ASTEROIDS_ENABLED(true),
         SATELLITES_ENABLED(true),
         SATELLITE_CHANCE(1),
         GENERATE_PLANETS(true),

@@ -182,9 +182,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @param z Z-pos
      * @param biomes 
      * @return Byte array
-     * @deprecated generateChunkData for 1.8+
      */
-    @Override
     public byte[][] generateBlockSections(World world, Random random, int x, int z, BiomeGrid biomes){
         if (!planets.containsKey(world)) {
             planets.put(world, new ArrayList<Planetoid>());
@@ -326,8 +324,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         for (int i = 0; i < density; i++) {
             // Try to make a planet
             Planetoid curPl = new Planetoid();
-            curPl.shellBlkIds = getShellBlocks(rand);
-            curPl.coreBlkIds = getCoreBlocks(rand);
+            curPl.shellBlkIds = getRandomShellBlocks(rand);
+            curPl.coreBlkIds = getRandomCoreBlocks(rand);
 
             curPl.shellThickness = rand.nextInt(maxShellSize - minShellSize) + minShellSize;
             curPl.radius = rand.nextInt(maxSize - minSize) + minSize;
@@ -462,7 +460,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     MessageHandler.print(Level.WARNING, newMat.toString() + " is not a block");
                 }
             }
-                else if (ConfigHandler.getIgnoreInvalidBlockIds()) { //Do we check for bad ids? Disabled in config for modded blocks
+                else if (ConfigHandler.getIgnoreInvalidBlockIds(ID)) { //Do we check for bad ids? Disabled in config for modded blocks
                 try {
                     matSet.add(newMat);
                 } catch (NumberFormatException numberFormatException) {
@@ -502,11 +500,11 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @return Material
      */
     private Set<Material> getRandomCoreBlocks(Random rand) {
-        return getBlockSet(rand, possibleCoreIds);
+        return getRandomBlockSet(rand, possibleCoreIds);
     }
 
     private Set<Material> getRandomShellBlocks(Random rand) {
-        return getBlockSet(rand, possibleShellIds);
+        return getRandomBlockSet(rand, possibleShellIds);
     }
 
     private Set<Material> getRandomBlockSet(Random rand, Map<Set<Material>, Float> possibleBlkIds) {
@@ -615,7 +613,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             maxShellSize = config.getInt("maxShellSize", (Integer) SpaceConfig.Defaults.MAX_SHELL_SIZE.getDefault()); // Maximum shell thickness
             minShellSize = config.getInt("minShellSize", (Integer) SpaceConfig.Defaults.MIN_SHELL_SIZE.getDefault()); // Minimum shell thickness, should be at least 3
             floorBlock = Material.matchMaterial(config.getString("floorBlock", (String) SpaceConfig.Defaults.FLOOR_BLOCK.getDefault()));// BlockID for the floor
-            } catch (IOException ex) {
+        } catch (IOException ex) {
             MessageHandler.debugPrint(Level.WARNING, "IOException when getting info for planets file for id "+ ID);
         } catch (InvalidConfigurationException ex) {
             MessageHandler.debugPrint(Level.WARNING, "InvalidConfigurationException when getting info for planets file for id "+ ID);

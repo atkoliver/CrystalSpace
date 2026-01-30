@@ -23,6 +23,10 @@ import java.util.Random;
  * @author iffa
  * @author NeonMaster (thanks for the original satellite design, too bad my mathematics blew it up!)
  */
+
+//TODO: Evaluate removal (bloat)
+//Reason: Can be replaced as a default .schematic that also spotlights .schematic generator, including item chests and "space dungeons" for mob farms
+
 public class SpaceSatellitePopulator extends BlockPopulator {
     /**
      * Populates a world with satellites.
@@ -34,7 +38,7 @@ public class SpaceSatellitePopulator extends BlockPopulator {
     @Override
     public void populate(World world, Random random, Chunk source) {
         String id = ConfigHandler.getID(world);
-        if (random.nextInt(1337) <= ConfigHandler.getSatelliteChance(id)) {
+        if (random.nextInt() <= ConfigHandler.getSatelliteChance(id)) {
             int height = random.nextInt(world.getMaxHeight());
             buildSatellite(world, height, source);
         }
@@ -50,12 +54,12 @@ public class SpaceSatellitePopulator extends BlockPopulator {
     private void buildSatellite(World world, int height, Chunk source) {
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 3; y++) {
-                source.getBlock(y, height, x).setTypeId(102);
+                source.getBlock(y, height, x).setType(Material.GLASS_PANE);
             }
         }
         for (int x = 6; x < 11; x++) {
             for (int y = 0; y < 3; y++) {
-                source.getBlock(y, height, x).setTypeId(102);
+                source.getBlock(y, height, x).setType(Material.GLASS_PANE);
             }
         }
         for (int y = 0; y < 3; y++) {

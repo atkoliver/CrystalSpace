@@ -12,8 +12,8 @@ package com.crystalcraftmc.crystalspace.api.schematic;
 import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.material.BlockData;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.util.BlockVector;
 import org.jnbt.*;
 
@@ -81,8 +81,9 @@ public class SpaceSchematicHandler {
             int originZ = origin.getBlockZ() + location.getBlockZ();
 
             for (Material material : blocksMap.get(location).keySet()) {
-                world.getBlockAt(originX, originY, originZ).setType(material);
-                world.getBlockAt(originX, originY, originZ).setBlockData(blocksMap.get(location).get(material).getData());
+                Block block = world.getBlockAt(originX, originY, originZ);
+                block.setType(material);
+                block.setBlockData(blocksMap.get(location).get(material));
             }
         }
     }

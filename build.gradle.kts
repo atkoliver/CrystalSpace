@@ -10,7 +10,7 @@ plugins {
 repositories {
     mavenLocal()
     maven {
-        url = uri("https://hub.spigotmc.org/nexus/content/groups/public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
 
     maven {
@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    api(libs.org.spigotmc.spigot.api)
-    compileOnly(libs.org.bukkit.bukkit)
+    // api(libs.org.spigotmc.spigot.api)
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 }
 
 group = "com.crystalcraftmc.crystalspace"

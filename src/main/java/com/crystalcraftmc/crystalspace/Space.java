@@ -11,13 +11,9 @@ package com.crystalcraftmc.crystalspace;
 
 import com.crystalcraftmc.crystalspace.api.SpaceAddon;
 import com.crystalcraftmc.crystalspace.api.schematic.SpaceSchematicHandler;
-import com.crystalcraftmc.crystalspace.commands.SpaceCommandHandler;
 import com.crystalcraftmc.crystalspace.config.SpaceConfig;
 import com.crystalcraftmc.crystalspace.handlers.*;
-import com.crystalcraftmc.crystalspace.listeners.SpaceEntityListener;
-import com.crystalcraftmc.crystalspace.listeners.SpacePlayerListener;
-import com.crystalcraftmc.crystalspace.listeners.SpaceSuffocationListener;
-import com.crystalcraftmc.crystalspace.listeners.misc.SpaceWorldListener;
+import com.crystalcraftmc.crystalspace.listeners.*;
 import com.crystalcraftmc.crystalspace.wgen.planets.PlanetsChunkGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,44 +39,8 @@ public class Space extends JavaPlugin {
     // Variables
     private static String prefix;
     private static String version;
-    private static Map<Player, Location> locCache = null;
-    private static Map<Player, Boolean> jumpPressed = new HashMap<Player, Boolean>();
-    private final SpaceEntityListener entityListener = new SpaceEntityListener();
-    private final SpaceWorldListener worldListener = new SpaceWorldListener();
-    private final SpacePlayerListener playerListener = new SpacePlayerListener();
-    private final SpaceSuffocationListener suffocationListener = new SpaceSuffocationListener(this);
     private PluginManager pm;
     private SpaceCommandHandler sce = null;
-
-    /**
-     * Gets the jump pressed value. (ie = wtf is this)
-     *
-     * @param player Player
-     *
-     * @return Jump pressed
-     */
-    public static boolean getJumpPressed(Player player) {
-        return jumpPressed.get(player);
-    }
-
-    /**
-     * Sets the jump pressed value. (ie = wtf is this ??)
-     *
-     * @param player Player
-     * @param newJumpPressed New jump pressed value
-     */
-    public static void setJumpPressed(Player player, boolean newJumpPressed) {
-        jumpPressed.put(player, newJumpPressed);
-    }
-
-    /**
-     * Gets the location cache.
-     *
-     * @return Location cache
-     */
-    public static Map<Player, Location> getLocCache() {
-        return locCache;
-    }
 
     /**
      * Gets the plugin's prefix.
@@ -143,15 +103,6 @@ public class Space extends JavaPlugin {
         sce = new SpaceCommandHandler(this);
         getCommand("space").setExecutor(sce);
         MessageHandler.debugPrint(Level.INFO, "Initialized CommandExecutors.");
-
-        // Checking if it should always be night in space worlds.
-        for (World world : WorldHandler.getSpaceWorlds()) {
-            String id = ConfigHandler.getID(world);
-            if (ConfigHandler.forceNight(id)) {
-                WorldHandler.startForceNightTask(world);
-                MessageHandler.debugPrint(Level.INFO, "Started night forcing task for world '" + world.getName() + "'.");
-            }
-        }
 
         // Finishing up enablation.
         MessageHandler.print(Level.INFO, LangHandler.getEnabledMessage());

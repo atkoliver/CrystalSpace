@@ -1,6 +1,6 @@
 # CrystalSpace v3.0.0-ALPHA - IDs File
 # ----------------------------------------
-ids:
+worlds:
 ############# YOUR ID'S HERE:
     # TODO: Documentation for configs! (new and up-to-date ones that is)
     # Example ID - totally empty (to simulate the old empty generator with the new one)
@@ -15,12 +15,6 @@ ids:
             stonechance: 3
             satellitechance: 1
             schematicchance: 5
-        suit:
-            required: false
-        helmet:
-            required: false
-        maxroomheight: 5
-        alwaysnight: true
     # Generate everything
     default:
         generation:
@@ -33,9 +27,3 @@ ids:
             stonechance: 3
             satellitechance: 1
             schematicchance: 5
-        suit:
-            required: false
-        helmet:
-            required: false
-        maxroomheight: 5
-        alwaysnight: false

@@ -12,6 +12,7 @@ package com.crystalcraftmc.crystalspace.wgen.populators;
 import com.crystalcraftmc.crystalspace.handlers.ConfigHandler;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
@@ -28,9 +29,8 @@ import java.util.Random;
  */
 public class SpaceAsteroidPopulator extends BlockPopulator {
     // Variables
-
     private static final BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
-
+    
     /**
      * Populates a world with stone patches.
      * 
@@ -40,49 +40,43 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
      */
     @Override
     public void populate(World world, Random random, Chunk source) {
+        String id = ConfigHandler.getID(world);
         for (int i = 0; i < 2; i++) {
-            Block block = getRandomBlock(source, random);
-            String id = ConfigHandler.getID(world);
-            if (random.nextInt(200) <= ConfigHandler.getStoneChance(id) && block.getTypeId() == 0) {
-                block.setTypeId(1);
-                for (int j = 0; j < 1500; j++) {
-                    Block current = block.getRelative(random.nextInt(8) - random.nextInt(8),
-                            random.nextInt(12),
-                            random.nextInt(8) - random.nextInt(8));
-                    if (current.getTypeId() != 0) {
-                        continue;
-                    }
-                    int count = 0;
-                    for (BlockFace face : faces) {
-                        if (current.getRelative(face).getTypeId() == 1) {
-                            count++;
-                        }
-                    }
-                    if (count == 1) {
-                        current.setTypeId(1);
+            if (random.nextInt(200) <= ConfigHandler.getStoneChance(id)) {
+                generateAsteroid(Material.STONE, source, random);
+            }
+            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(id)) {
+                generateAsteroid(Material.GLOWSTONE, source, random);
+            }
+        }
+    }
+
+    /**
+     * Generates an asteroid in chunk
+     * 
+     * @param material Material
+     * @param random Random
+     * @param source Source chunk
+     */
+    private void generateAsteroid(Material material, Random random, Chunk Source) {
+        Block block = getRandomBlock(source, random);
+        if (block.getType() == Material.AIR) {
+            block.setType(Material.STONE);
+            for (int j = 0; j < 1500; j++) {
+                Block current = block.getRelative(random.nextInt(8) - random.nextInt(8),
+                        random.nextInt(12),
+                        random.nextInt(8) - random.nextInt(8));
+                if (current.getType() != Material.AIR) {
+                    continue;
+                }
+                int count = 0;
+                for (BlockFace face : faces) {
+                    if (current.getRelative(face).getType() == Material.STONE) {
+                        count++;
                     }
                 }
-            }
-            block = getRandomBlock(source, random);
-            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(id) && block.getTypeId() == 0) {
-                block.setTypeId(89);
-
-                for (int j = 0; j < 1500; j++) {
-                    Block current = block.getRelative(random.nextInt(8) - random.nextInt(8),
-                            random.nextInt(12),
-                            random.nextInt(8) - random.nextInt(8));
-                    if (current.getTypeId() != 0) {
-                        continue;
-                    }
-                    int count = 0;
-                    for (BlockFace face : faces) {
-                        if (current.getRelative(face).getTypeId() == 89) {
-                            count++;
-                        }
-                    }
-                    if (count == 1) {
-                        current.setTypeId(89);
-                    }
+                if (count == 1) {
+                    current.setType(Material.STONE);
                 }
             }
         }

@@ -1,14 +1,20 @@
+@echo off
 :: arg1 = MC-VERSION (select correct server.jar + select correct CrystalSpace test build)
 :: arg2 = SERVER-VERSION (select correct server .jar)
 
 :: Check if there are 2 arguments
-@echo off
+:exiterror
+echo [ERROR] %~nx0: Usage:   %~nx0 MC-VERSION SERVER-TYPE
+echo [ERROR] %~nx0: Example: %~nx0 1.21.11 paper
+exit /b 1
+
+if "%~1"=="" (
+    echo [ERROR] %~nx0: Missing argument MC-VERSION!
+    call :exiterror
+)
 if "%~2"=="" (
-    echo [ERROR] %~nx0: Missing argument! For detailed usage info, open me and read me.
-    echo [ERROR] %~nx0: Usage:   %~nx0 MC-VERSION SERVER-TYPE
-    echo [ERROR] %~nx0: Example: %~nx0 1.21.11 paper
-    pause >nul
-    exit /b 1
+    echo [ERROR] %~nx0: Missing argument SERVER-TYPE!
+    call :exiterror
 )
 
 :: Copy latest plugin build
@@ -20,4 +26,4 @@ copy /Y ..\build\libs\CrystalSpace-%1.jar server\plugins\CrystalSpaceTestBuild.j
 
 cd server\
 
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -jar server-%2-%1.jar nogui
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -jar server-%~2-%~1.jar nogui

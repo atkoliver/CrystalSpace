@@ -7,7 +7,7 @@
  */
 
 // Package Declaration
-package com.crystalcraftmc.crystalspace.listeners.misc;
+package com.crystalcraftmc.crystalspace.listeners;
 
 import com.crystalcraftmc.crystalspace.handlers.ConfigHandler;
 import com.crystalcraftmc.crystalspace.handlers.MessageHandler;

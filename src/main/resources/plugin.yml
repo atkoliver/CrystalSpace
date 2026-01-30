@@ -56,6 +56,3 @@ permissions:
   CrystalSpace.teleport.list:
     description: Allows requesting list of spaceworlds.
     default: op
-  CrystalSpace.ignoresuitchecks:
-    description: Ignores all suit and helmet checks for the player.
-    default: false
