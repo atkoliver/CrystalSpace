@@ -43,10 +43,10 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
         String id = ConfigHandler.getID(world);
         for (int i = 0; i < 2; i++) {
             if (random.nextInt(200) <= ConfigHandler.getStoneChance(id)) {
-                generateAsteroid(Material.STONE, source, random);
+                generateAsteroid(Material.STONE, random, source);
             }
             if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(id)) {
-                generateAsteroid(Material.GLOWSTONE, source, random);
+                generateAsteroid(Material.GLOWSTONE, random, source);
             }
         }
     }
@@ -58,7 +58,7 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
      * @param random Random
      * @param source Source chunk
      */
-    private void generateAsteroid(Material material, Random random, Chunk Source) {
+    private void generateAsteroid(Material material, Random random, Chunk source) {
         Block block = getRandomBlock(source, random);
         if (block.getType() == Material.AIR) {
             block.setType(Material.STONE);

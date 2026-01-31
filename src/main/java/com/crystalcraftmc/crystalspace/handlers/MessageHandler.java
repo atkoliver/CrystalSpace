@@ -9,7 +9,7 @@
 package com.crystalcraftmc.crystalspace.handlers;
 
 import com.crystalcraftmc.crystalspace.api.SpaceMessageHandler;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
@@ -53,7 +53,7 @@ public class MessageHandler extends SpaceMessageHandler {
      * @param player Player
      */
     public static void sendNoPermissionMessage(Player player) {
-        player.sendMessage(ChatColor.RED + LangHandler.getNoPermissionMessage());
+        player.sendMessage(NamedTextColor.RED + LangHandler.getNoPermissionMessage());
     }
 
     /**
@@ -62,7 +62,7 @@ public class MessageHandler extends SpaceMessageHandler {
      * @param player Player
      */
     public static void sendNotEnoughMoneyMessage(Player player) {
-        player.sendMessage(ChatColor.RED + LangHandler.getNotEnoughMoneyMessage());
+        player.sendMessage(NamedTextColor.RED + LangHandler.getNotEnoughMoneyMessage());
     }
      
     private MessageHandler() {

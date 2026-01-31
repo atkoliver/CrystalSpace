@@ -14,7 +14,7 @@ import com.crystalcraftmc.crystalspace.handlers.LangHandler;
 import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import com.crystalcraftmc.crystalspace.handlers.PlayerHandler;
 import com.crystalcraftmc.crystalspace.handlers.WorldHandler;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,10 +50,10 @@ public class SpaceListCommand extends SpaceCommand {
             return;
         }
         if (WorldHandler.getSpaceWorlds().isEmpty()) {
-            getSender().sendMessage(ChatColor.RED + LangHandler.getNoSpaceLoaded());
+            getSender().sendMessage(NamedTextColor.RED + LangHandler.getNoSpaceLoaded());
             return;
         }
-        getSender().sendMessage(ChatColor.GOLD + Space.getPrefix() + " " + LangHandler.getListOfSpaceMessage());
+        getSender().sendMessage(NamedTextColor.GOLD + Space.getPrefix() + " " + LangHandler.getListOfSpaceMessage());
         List<String> spaceWorlds = new ArrayList<String>();
         for (World world : WorldHandler.getSpaceWorlds()) {
             if (world == null) {
@@ -62,6 +62,6 @@ public class SpaceListCommand extends SpaceCommand {
             }
             spaceWorlds.add(world.getName());
         }
-        getSender().sendMessage(ChatColor.GRAY + spaceWorlds.toString().replace("]", "").replace("[", ""));
+        getSender().sendMessage(NamedTextColor.GRAY + spaceWorlds.toString().replace("]", "").replace("[", ""));
     }
 }

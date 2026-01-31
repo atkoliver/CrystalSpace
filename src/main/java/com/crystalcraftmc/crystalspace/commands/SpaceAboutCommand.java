@@ -11,7 +11,7 @@ package com.crystalcraftmc.crystalspace.commands;
 
 import com.crystalcraftmc.crystalspace.Space;
 import com.crystalcraftmc.crystalspace.handlers.WorldHandler;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -35,17 +35,18 @@ public class SpaceAboutCommand extends SpaceCommand {
     /**
      * Executes <code>/space about</code> command.
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void command() {
         if (getArgs().length < 2) {
-            getSender().sendMessage(ChatColor.GOLD + "About:");
-            getSender().sendMessage(ChatColor.GOLD + "-" + ChatColor.GRAY + " You're running version " +
-                    ChatColor.GOLD + getPlugin().getDescription().getVersion());
-            getSender().sendMessage(ChatColor.GOLD + "-" + ChatColor.GRAY + " There are currently " +
-                    ChatColor.GOLD + WorldHandler.getSpaceWorlds().size() + ChatColor.GRAY + " space worlds loaded.");
+            getSender().sendMessage(NamedTextColor.GOLD + "About:");
+            getSender().sendMessage(NamedTextColor.GOLD + "-" + NamedTextColor.GRAY + " You're running version " +
+                    NamedTextColor.GOLD + getPlugin().getDescription().getVersion());
+            getSender().sendMessage(NamedTextColor.GOLD + "-" + NamedTextColor.GRAY + " There are currently " +
+                    NamedTextColor.GOLD + WorldHandler.getSpaceWorlds().size() + NamedTextColor.GRAY + " space worlds loaded.");
         } else if (getArgs().length < 3 && getArgs()[1].equals("developers")) {
-            getSender().sendMessage(ChatColor.GOLD + "-" + ChatColor.GRAY + " Core Developers:");
-            getSender().sendMessage(ChatColor.GOLD + "    jflory7, iffa");
+            getSender().sendMessage(NamedTextColor.GOLD + "-" + NamedTextColor.GRAY + " Core Developers:");
+            getSender().sendMessage(NamedTextColor.GOLD + "    jflory7, iffa");
         }
     }
 }

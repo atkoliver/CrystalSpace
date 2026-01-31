@@ -13,7 +13,6 @@ import com.crystalcraftmc.crystalspace.api.SpaceAddon;
 import com.crystalcraftmc.crystalspace.api.schematic.SpaceSchematicHandler;
 import com.crystalcraftmc.crystalspace.config.SpaceConfig;
 import com.crystalcraftmc.crystalspace.handlers.*;
-import com.crystalcraftmc.crystalspace.listeners.*;
 import com.crystalcraftmc.crystalspace.wgen.planets.PlanetsChunkGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -120,23 +119,17 @@ public class Space extends JavaPlugin {
     /**
      * Registers events for CrystalSpace.
      */
-    private void registerEvents() {
+    private void registerEvents() { //TODO: Evaluate deletion
         // Registering other events.
-        pm.registerEvents(worldListener, this);
-        MessageHandler.debugPrint(Level.INFO, "Registered events (other).");
-
-        // Registering entity & player events.
-        pm.registerEvents(entityListener, this);
-        pm.registerEvents(playerListener, this);
-        pm.registerEvents(suffocationListener, this);
-        MessageHandler.debugPrint(Level.INFO, "Registered events (entity & player).");
+        //pm.registerEvents(worldListener, this);
+        //MessageHandler.debugPrint(Level.INFO, "Registered events (other).");
     }
 
     /**
      * Gets the default world generator of the plugin.
      *
      * @param worldName World name
-     * @param id ID (cow, fish etc)
+     * @param id ID World id inside multiverse ("spaceworld", "test2", "Sirius", etc...)
      *
      * @return ChunkGenerator to use
      */
@@ -149,10 +142,12 @@ public class Space extends JavaPlugin {
             MessageHandler.debugPrint(Level.INFO, "Getting generator for '" + worldName + "' using default id,planets.");
         }
         WorldHandler.checkWorld(worldName);
+
+        //TODO Check if id is in worlds.yml
+        //if (!realID || !idHasCustomGenerator(id)) {
         if (!realID) {
             return new PlanetsChunkGenerator("planets");
         }
-        //TODO check if id is in ids.yml
         return new PlanetsChunkGenerator(id);
     }
 }

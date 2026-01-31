@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Copy Latest Build & Launch Server (1_21_11, Paper)",
+      "command": "cmd",
+      "type": "shell",
+      "args": [
+        "/c",
+        "start-server.bat",
+        "1.21.11",
+        "paper"
+      ],
+      "options": {
+        "cwd":  "debug-scripts\\"
+      },
+      "problemMatcher": [
+        {
+          "pattern": [
+            {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": false,
+            "beginsPattern": "Starting",
+            "endsPattern": ".",
+          }
+        }
+      ],
+      "presentation": {
+        "panel" : "new",
+        "reveal": "always",
+        "echo": true,
+        "focus": true
+      },
+      "isBackground": true,
+      "group": "build"
+    }
+  ]
+}

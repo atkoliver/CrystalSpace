@@ -15,7 +15,7 @@ import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import com.crystalcraftmc.crystalspace.handlers.PlayerHandler;
 import com.crystalcraftmc.crystalspace.handlers.WorldHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -62,8 +62,8 @@ public class SpaceExitCommand extends SpaceCommand {
                     return;
                 } else {
                     SpaceEnterCommand.exitDest.put(player, Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-                    getSender().sendMessage(ChatColor.RED + LangHandler.getNoExitFoundMessage(1));
-                    getSender().sendMessage(ChatColor.RED + LangHandler.getNoExitFoundMessage(2));
+                    getSender().sendMessage(NamedTextColor.RED + LangHandler.getNoExitFoundMessage(1));
+                    getSender().sendMessage(NamedTextColor.RED + LangHandler.getNoExitFoundMessage(2));
                     return;
                 }
             } else {
@@ -71,7 +71,7 @@ public class SpaceExitCommand extends SpaceCommand {
                 return;
             }
         } else {
-            player.sendMessage(ChatColor.RED + LangHandler.getNotInSpaceMessage());
+            player.sendMessage(NamedTextColor.RED + LangHandler.getNotInSpaceMessage());
             return;
         }
     }

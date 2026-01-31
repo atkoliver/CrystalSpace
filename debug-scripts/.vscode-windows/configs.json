@@ -1,0 +1,20 @@
+{
+    "version": "0.3.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "preLaunchTask": "Copy Latest Build + Launch Server (1_21_11, Paper)",
+            "type": "java",
+            "name": "Debug MC Server (1_21_11)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005,
+            "timeout": 30000
+        }
+    ]
+}

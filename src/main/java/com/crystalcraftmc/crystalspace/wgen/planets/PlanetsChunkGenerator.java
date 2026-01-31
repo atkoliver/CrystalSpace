@@ -460,7 +460,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     MessageHandler.print(Level.WARNING, newMat.toString() + " is not a block");
                 }
             }
-                else if (ConfigHandler.getIgnoreInvalidBlockIds(ID)) { //Do we check for bad ids? Disabled in config for modded blocks
+                else if (!ConfigHandler.getIgnoreInvalidBlockIds(ID)) { //Do we check for bad ids? Disabled in config for modded blocks
                 try {
                     matSet.add(newMat);
                 } catch (NumberFormatException numberFormatException) {

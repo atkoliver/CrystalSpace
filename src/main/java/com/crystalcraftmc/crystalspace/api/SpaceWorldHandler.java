@@ -11,9 +11,6 @@ package com.crystalcraftmc.crystalspace.api;
 
 import com.crystalcraftmc.crystalspace.Space;
 import com.crystalcraftmc.crystalspace.handlers.ConfigHandler;
-import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
-import com.crystalcraftmc.crystalspace.handlers.WorldHandler;
-import com.crystalcraftmc.crystalspace.runnables.NightForceRunnable;
 import com.crystalcraftmc.crystalspace.wgen.planets.PlanetsChunkGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -23,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Class that handles space worlds.
@@ -49,25 +45,6 @@ public class SpaceWorldHandler {
             }
         }
     }*/
-
-    /**
-     * Starts the force night task if required.
-     * 
-     * @param world World
-     */
-    public static void startForceNightTask(World world) {
-        NightForceRunnable task = new NightForceRunnable(world);
-        forcenightId.put(world, Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 60, 8399));
-    }
-
-    /**
-     * Stops the force night task. No safety checks made, explosions may occur.
-     * 
-     * @param world World
-     */
-    public static void stopForceNightTask(World world) {
-        Bukkit.getScheduler().cancelTask(forcenightId.get(world));
-    }
 
     /**
      * Gives all the space worlds of the server.
@@ -170,10 +147,6 @@ public class SpaceWorldHandler {
         World world = Bukkit.getWorld(worldName);
         if(world == null) return;
         String id = ConfigHandler.getID(world);
-        if (ConfigHandler.forceNight(id)) {
-            WorldHandler.startForceNightTask(world);
-            MessageHandler.debugPrint(Level.INFO, "Started night forcing task for world '" + world.getName() + "'.");
-        }
     }
 
     protected SpaceWorldHandler() {

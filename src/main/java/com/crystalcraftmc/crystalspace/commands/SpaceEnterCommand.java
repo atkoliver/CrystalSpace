@@ -15,7 +15,7 @@ import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import com.crystalcraftmc.crystalspace.handlers.PlayerHandler;
 import com.crystalcraftmc.crystalspace.handlers.WorldHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,11 +54,11 @@ public class SpaceEnterCommand extends SpaceCommand {
         if (getArgs().length == 1) {
             if (PlayerHandler.hasPermission("CrystalSpace.teleport.enter", player)) {
                 if (WorldHandler.getSpaceWorlds().isEmpty()) {
-                    player.sendMessage(ChatColor.RED + LangHandler.getNoSpaceLoaded());
+                    player.sendMessage(NamedTextColor.RED + LangHandler.getNoSpaceLoaded());
                     return;
                 }
                 if (WorldHandler.getSpaceWorlds().get(0) == player.getWorld()) {
-                    player.sendMessage(ChatColor.RED + LangHandler.getAlreadyInThatWorldMessage());
+                    player.sendMessage(NamedTextColor.RED + LangHandler.getAlreadyInThatWorldMessage());
                     MessageHandler.debugPrint(Level.INFO, player.getName() + "tried to use /space enter, but he was already in that space world.");
                     return;
                 }
@@ -82,15 +82,15 @@ public class SpaceEnterCommand extends SpaceCommand {
         } else if (getArgs().length >= 2) {
             if (PlayerHandler.hasPermission("CrystalSpace.teleport.enter", player)) {
                 if (Bukkit.getServer().getWorld(getArgs()[1]) == null) {
-                    player.sendMessage(ChatColor.RED + LangHandler.getWorldNotFoundMessage());
+                    player.sendMessage(NamedTextColor.RED + LangHandler.getWorldNotFoundMessage());
                     return;
                 }
                 if (!WorldHandler.isSpaceWorld(Bukkit.getServer().getWorld(this.getArgs()[1]))) {
-                    player.sendMessage(ChatColor.RED + LangHandler.getWorldNotSpaceMessage());
+                    player.sendMessage(NamedTextColor.RED + LangHandler.getWorldNotSpaceMessage());
                     return;
                 }
                 if (Bukkit.getServer().getWorld(getArgs()[1]) == player.getWorld()) {
-                    player.sendMessage(ChatColor.RED + LangHandler.getAlreadyInThatWorldMessage());
+                    player.sendMessage(NamedTextColor.RED + LangHandler.getAlreadyInThatWorldMessage());
                     return;
                 }
                 exitDest.put(player, player.getLocation());

@@ -10,7 +10,6 @@
 package com.crystalcraftmc.crystalspace.config;
 
 import com.crystalcraftmc.crystalspace.api.schematic.SpaceSchematicHandler;
-import com.crystalcraftmc.crystalspace.config.SpaceConfig.ConfigFile;
 import com.crystalcraftmc.crystalspace.handlers.LangHandler;
 import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
 import org.bukkit.Bukkit;
@@ -231,7 +230,7 @@ public class SpaceConfig {
         MIN_DISTANCE(10),
         FLOOR_HEIGHT(0),
         BEDROCK_ENABLED(true),
-        IGNORE_INVALID_BLOCK_IDS(false),
+        IGNORE_INVALID_BLOCK_IDS(true),
         MAX_SHELL_SIZE(5),
         MIN_SHELL_SIZE(3),
         FLOOR_BLOCK("STATIONARY_WATER");

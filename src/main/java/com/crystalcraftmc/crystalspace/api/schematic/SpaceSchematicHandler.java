@@ -10,6 +10,7 @@
 package com.crystalcraftmc.crystalspace.api.schematic;
 
 import com.crystalcraftmc.crystalspace.handlers.MessageHandler;
+import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -251,7 +252,8 @@ public class SpaceSchematicHandler {
             for (int y = 0; y < height; ++y) {
                 for (int z = 0; z < length; ++z) {
                     int index = y * width * length + z * width + x;
-                    Material block = Material.getMaterial(schematic.getBlocks()[index]);
+                    //Material block = Material.getMaterial(schematic.getBlocks()[index]);
+                    Material block = Material.OAK_LOG; //Bandaid fix until I figure out what to do
                     BlockData blockData = null;
                     try {
                         //PROBLEM: How to construct BlockData from the (byte) data from schematic? How is (byte) data formatted?
