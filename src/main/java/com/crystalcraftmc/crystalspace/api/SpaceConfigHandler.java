@@ -23,6 +23,7 @@ import org.bukkit.World;
  * @author iffa
  * @author Jack
  * @author jflory7
+ * @author atkoliver
  */
 public class SpaceConfigHandler {
 
@@ -46,22 +47,6 @@ public class SpaceConfigHandler {
         return SpaceConfig.getConfig(ConfigFile.IDS).getString("ids."+id+".generation.planets-file", "planets.yml");
     }
 
-    /**
-     * Check if invalid block names in config should be ignored.
-     * If false, the server will crash instead of ignoring them!
-     * Used for enabling modded blocks, as they aren't included in the default materials list.
-     *
-     * @param id Id
-     *
-     * @return ignoreinvalidblock boolean int
-     */
-    public static boolean getIgnoreInvalidBlockIds(String id){
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".ignoreinvalidblockids", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
-            //return (Integer) ROOM_HEIGHT.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".ignoreinvalidblockids", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
-    }
     /**
      * Gets the glowstone chance of a world.
      *
