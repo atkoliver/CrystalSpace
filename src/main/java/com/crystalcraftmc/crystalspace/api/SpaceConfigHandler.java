@@ -18,11 +18,11 @@ import org.bukkit.World;
 /**
  * Static methods handle configuration.
  * External use only
- * TODO: Put defaults back to use! (currently commented out... needs some refactoring for it to work)
  *
  * @author iffa
  * @author Jack
  * @author jflory7
+ * @author atkoliver
  */
 public class SpaceConfigHandler {
 
@@ -43,147 +43,119 @@ public class SpaceConfigHandler {
         if (id.equalsIgnoreCase("planets")){
             return "planets.yml";
         }
+        //TODO: Evaluate removal. What purpose does this serve?
         return SpaceConfig.getConfig(ConfigFile.IDS).getString("ids."+id+".generation.planets-file", "planets.yml");
     }
 
     /**
-     * Check if invalid block names in config should be ignored.
-     * If false, the server will crash instead of ignoring them!
-     * Used for enabling modded blocks, as they aren't included in the default materials list.
+     * Check if debugging mode is enabled.
+     * Used by server owners to quickly troubleshoot the plugin.
+     * As a developer, use the good remote debugger instead!
      *
-     * @param id Id
-     *
-     * @return ignoreinvalidblock boolean int
+     * @return boolean
      */
-    public static boolean getIgnoreInvalidBlockIds(String id){
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".ignoreinvalidblockids", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
-            //return (Integer) ROOM_HEIGHT.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".ignoreinvalidblockids", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
-    }
-    /**
-     * Gets the glowstone chance of a world.
-     *
-     * @param id Id
-     *
-     * @return glowstone chance int
-     */
-    public static int getGlowstoneChance(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) SpaceConfig.Defaults.GLOWSTONE_CHANCE.getDefault());
-            //return (Integer) GLOWSTONE_CHANCE.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) SpaceConfig.Defaults.GLOWSTONE_CHANCE.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) GLOWSTONE_CHANCE.getDefault());
+    public static boolean getDebugging() {
+        return SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("debugging", (Boolean) SpaceConfig.Defaults.DEBUGGING.getDefault());
     }
 
     /**
-     * Gets the stone chance of a world.
+     * Check if invalid block names in planets.yml should be ignored.
+     * If false, the server will crash when it encounters invalid blocks!
+     * Used by modded servers to enable custom blocks.
      *
-     * @param id ID
+     * @param id Id
      *
-     * @return asteroid chance int
+     * @return boolean
      */
-    public static int getStoneChance(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.stonechance", (Integer) SpaceConfig.Defaults.STONE_CHANCE.getDefault());
-            //return (Integer) STONE_CHANCE.getDefault();
-        }
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.stonechance", (Integer) SpaceConfig.Defaults.STONE_CHANCE.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.stonechance", (Integer) STONE_CHANCE.getDefault());
+    public static boolean getIgnoreInvalidBlockIds(){
+        return SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("ignoreInvalidBlockIds", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault());
     }
 
     /**
-     * Checks if asteroid generation is enabled for a world.
+     * Check if asteroid generation is enabled for this world.
      *
      * @param id
      *
-     * @return true if asteroid generation is enabled
+     * @return boolean
      */
     public static boolean getAsteroidsEnabled(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateasteroids", (Boolean) SpaceConfig.Defaults.ASTEROIDS_ENABLED.getDefault());
-            //return (Boolean) ASTEROIDS_ENABLED.getDefault();
-        }
         return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateasteroids", (Boolean) SpaceConfig.Defaults.ASTEROIDS_ENABLED.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateasteroids", (Boolean) ASTEROIDS_ENABLED.getDefault());
+    }
+    /**
+     * Gets the glowstone asteroid chance of this world.
+     *
+     * @param id Id
+     *
+     * @return int asteroid chance 
+     */
+    public static int getGlowstoneChance(String id) {
+        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) SpaceConfig.Defaults.GLOWSTONE_CHANCE.getDefault());
     }
 
     /**
-     * Checks if satellites are enabled.
+     * Gets the stone asteroid chance of this world.
      *
      * @param id ID
      *
-     * @return True if satellites are enabled
+     * @return int asteroid chance
+     */
+    public static int getStoneChance(String id) {
+        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.stonechance", (Integer) SpaceConfig.Defaults.STONE_CHANCE.getDefault());
+    }
+
+    /**
+     * Check if satellites are enabled in this world.
+     *
+     * @param id ID
+     *
+     * @return boolean
      */
     public static boolean getSatellitesEnabled(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generatesatellites", (Boolean) SpaceConfig.Defaults.SATELLITES_ENABLED.getDefault());
-            //return (Boolean) SATELLITES_ENABLED.getDefault();
-        }
         return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generatesatellites", (Boolean) SpaceConfig.Defaults.SATELLITES_ENABLED.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generatesatellites", (Boolean) SATELLITES_ENABLED.getDefault());
     }
 
     /**
-     * Gets the satellite spawn chance.
+     * Gets the satellite spawn chance of this world.
      *
      * @param id ID
      *
-     * @return Spawn chance
+     * @return int satellite chance
      */
     public static int getSatelliteChance(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.satellitechance", (Integer) SpaceConfig.Defaults.SATELLITE_CHANCE.getDefault());
-            //return (Integer) SATELLITE_CHANCE.getDefault();
-        }
         return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.satellitechance", (Integer) SpaceConfig.Defaults.SATELLITE_CHANCE.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.satellitechance", (Integer) SATELLITE_CHANCE.getDefault());
     }
 
     /**
-     * Gets generate planets value.
+     * Check if planets are enabled in this world.
      *
      * @param id ID
      *
-     * @return True if generateplantes=true
+     * @return boolean
      */
     public static boolean getGeneratePlanets(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateplanets", (Boolean) SpaceConfig.Defaults.GENERATE_PLANETS.getDefault());
-            //return (Boolean) GENERATE_PLANETS.getDefault();
-        }
         return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateplanets", (Boolean) SpaceConfig.Defaults.GENERATE_PLANETS.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateplanets", (Boolean) GENERATE_PLANETS.getDefault());
     }
 
     /**
-     * Gets generate schematics value.
+     * Check if schematics are enabled in this world.
      *
      * @param id ID
      *
-     * @return True if generateschematics=true
+     * @return boolean
      */
     public static boolean getGenerateSchematics(String id) {
         return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateschematics", (Boolean) SpaceConfig.Defaults.GENERATE_SCHEMATICS.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateschematics", (Boolean) GENERATE_SCHEMATICS.getDefault());
     }
 
     /**
-     * Gets the schematic-chance.
+     * Gets the schematic placement chance of this world.
      *
      * @param id ID
      *
-     * @return Schematic chance
+     * @return boolean schematic chance
      */
     public static int getSchematicChance(String id) {
-        if (id.equalsIgnoreCase("planets")) {
-            return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SpaceConfig.Defaults.SCHEMATIC_CHANCE.getDefault());
-            //return (Integer) SCHEMATIC_CHANCE.getDefault();
-        }
         return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SpaceConfig.Defaults.SCHEMATIC_CHANCE.getDefault());
-        //return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SCHEMATIC_CHANCE.getDefault());
     }
 
     /**

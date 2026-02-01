@@ -225,15 +225,15 @@ public class SpaceConfig {
         SCHEMATIC_CHANCE(5),
         // ConfigFile.DEFAULT_PLANETS
         DENSITY(15000),
+        MIN_DISTANCE(10),
         MIN_SIZE(4),
         MAX_SIZE(20),
-        MIN_DISTANCE(10),
-        FLOOR_HEIGHT(0),
-        BEDROCK_ENABLED(true),
-        IGNORE_INVALID_BLOCK_IDS(true),
         MAX_SHELL_SIZE(5),
         MIN_SHELL_SIZE(3),
-        FLOOR_BLOCK("STATIONARY_WATER");
+        FLOOR_HEIGHT(0),
+        FLOOR_BLOCK("STATIONARY_WATER"),
+        BEDROCK_ENABLED(true),
+        IGNORE_INVALID_BLOCK_IDS(true);
         // Variables
         private Object value;
 
