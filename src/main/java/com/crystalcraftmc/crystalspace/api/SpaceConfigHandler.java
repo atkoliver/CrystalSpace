@@ -48,6 +48,7 @@ public class SpaceConfigHandler {
     }
 
     /**
+<<<<<<< HEAD
      * Check if debugging mode is enabled.
      * Used by server owners to quickly troubleshoot the plugin.
      * As a developer, use the good remote debugger instead!

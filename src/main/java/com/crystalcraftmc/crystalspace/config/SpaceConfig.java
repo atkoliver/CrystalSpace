@@ -215,6 +215,7 @@ public class SpaceConfig {
      * @author iffa
      */
     public enum Defaults {
+        DEBUGGING(false),
         ASTEROIDS_ENABLED(true),
         GLOWSTONE_CHANCE(1),
         STONE_CHANCE(3),

@@ -8,6 +8,7 @@
 # planet generation turned on!
 
 # As this goes up, so does the potential number of planets
+debugging: true
 density: 1000
 minDistance: 100
 floorBlock: STATIONARY_WATER
