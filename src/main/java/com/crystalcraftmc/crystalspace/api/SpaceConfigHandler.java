@@ -44,7 +44,7 @@ public class SpaceConfigHandler {
             return "planets.yml";
         }
         //TODO: Evaluate removal. What purpose does this serve?
-        return SpaceConfig.getConfig(ConfigFile.IDS).getString("ids."+id+".generation.planets-file", "planets.yml");
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getString("ids."+id+".generation.planets-file", "planets.yml");
     }
 
     /**
@@ -80,7 +80,7 @@ public class SpaceConfigHandler {
      * @return boolean
      */
     public static boolean getAsteroidsEnabled(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateasteroids", (Boolean) SpaceConfig.Defaults.ASTEROIDS_ENABLED.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getBoolean("ids." + id + ".generation.generateasteroids", (Boolean) SpaceConfig.Defaults.ASTEROIDS_ENABLED.getDefault());
     }
     /**
      * Gets the glowstone asteroid chance of this world.
@@ -90,7 +90,7 @@ public class SpaceConfigHandler {
      * @return int asteroid chance 
      */
     public static int getGlowstoneChance(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) SpaceConfig.Defaults.GLOWSTONE_CHANCE.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getInt("ids." + id + ".generation.glowstonechance", (Integer) SpaceConfig.Defaults.GLOWSTONE_CHANCE.getDefault());
     }
 
     /**
@@ -101,7 +101,7 @@ public class SpaceConfigHandler {
      * @return int asteroid chance
      */
     public static int getStoneChance(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.stonechance", (Integer) SpaceConfig.Defaults.STONE_CHANCE.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getInt("ids." + id + ".generation.stonechance", (Integer) SpaceConfig.Defaults.STONE_CHANCE.getDefault());
     }
 
     /**
@@ -112,7 +112,7 @@ public class SpaceConfigHandler {
      * @return boolean
      */
     public static boolean getSatellitesEnabled(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generatesatellites", (Boolean) SpaceConfig.Defaults.SATELLITES_ENABLED.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getBoolean("ids." + id + ".generation.generatesatellites", (Boolean) SpaceConfig.Defaults.SATELLITES_ENABLED.getDefault());
     }
 
     /**
@@ -123,7 +123,7 @@ public class SpaceConfigHandler {
      * @return int satellite chance
      */
     public static int getSatelliteChance(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.satellitechance", (Integer) SpaceConfig.Defaults.SATELLITE_CHANCE.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getInt("ids." + id + ".generation.satellitechance", (Integer) SpaceConfig.Defaults.SATELLITE_CHANCE.getDefault());
     }
 
     /**
@@ -134,7 +134,7 @@ public class SpaceConfigHandler {
      * @return boolean
      */
     public static boolean getGeneratePlanets(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateplanets", (Boolean) SpaceConfig.Defaults.GENERATE_PLANETS.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getBoolean("ids." + id + ".generation.generateplanets", (Boolean) SpaceConfig.Defaults.GENERATE_PLANETS.getDefault());
     }
 
     /**
@@ -145,7 +145,7 @@ public class SpaceConfigHandler {
      * @return boolean
      */
     public static boolean getGenerateSchematics(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getBoolean("ids." + id + ".generation.generateschematics", (Boolean) SpaceConfig.Defaults.GENERATE_SCHEMATICS.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getBoolean("ids." + id + ".generation.generateschematics", (Boolean) SpaceConfig.Defaults.GENERATE_SCHEMATICS.getDefault());
     }
 
     /**
@@ -156,7 +156,7 @@ public class SpaceConfigHandler {
      * @return boolean schematic chance
      */
     public static int getSchematicChance(String id) {
-        return SpaceConfig.getConfig(ConfigFile.IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SpaceConfig.Defaults.SCHEMATIC_CHANCE.getDefault());
+        return SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getInt("ids." + id + ".generation.schematicchance", (Integer) SpaceConfig.Defaults.SCHEMATIC_CHANCE.getDefault());
     }
 
     /**

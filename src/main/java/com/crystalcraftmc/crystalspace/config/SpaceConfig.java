@@ -174,7 +174,7 @@ public class SpaceConfig {
         // Enums
 
         DEFAULT_PLANETS("planets.yml", "planets/planets.yml"),
-        IDS("worlds.yml", "worlds.yml"),
+        WORLD_IDS("worlds.yml", "worlds.yml"),
         LANG("lang.yml", "lang.yml");
         // Variables
         private String name;
@@ -215,7 +215,7 @@ public class SpaceConfig {
      * @author iffa
      */
     public enum Defaults {
-        DEBUGGING(false),
+        // ConfigFile.WORLD_IDS
         ASTEROIDS_ENABLED(true),
         GLOWSTONE_CHANCE(1),
         STONE_CHANCE(3),
@@ -225,6 +225,7 @@ public class SpaceConfig {
         GENERATE_SCHEMATICS(true),
         SCHEMATIC_CHANCE(5),
         // ConfigFile.DEFAULT_PLANETS
+        DEBUGGING(false),
         DENSITY(15000),
         MIN_DISTANCE(10),
         MIN_SIZE(4),

@@ -12,7 +12,7 @@ package com.crystalcraftmc.crystalspace.wgen.planets;
 import org.bukkit.Material;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Holder class for an individual planetoid.
@@ -48,7 +48,7 @@ public class Planetoid implements Serializable {
      * @param y Y-coord
      * @param z Z-coord
      */
-    public Planetoid(Set<Material> coreID, Set<Material> shellID, int shellThick, int radius, int x, int y, int z) {
+    public Planetoid(ArrayList<Material> coreID, ArrayList<Material> shellID, int shellThick, int radius, int x, int y, int z) {
         this.coreBlkIds = coreID;
         this.shellBlkIds = shellID;
         this.shellThickness = shellThick;

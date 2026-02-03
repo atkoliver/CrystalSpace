@@ -7,8 +7,9 @@
 # Remember, these settings affect all space worlds with 
 # planet generation turned on!
 
+# Send console messages to help with troubleshooting
+debugging: false
 # As this goes up, so does the potential number of planets
-debugging: true
 density: 1000
 minDistance: 100
 floorBlock: STATIONARY_WATER
