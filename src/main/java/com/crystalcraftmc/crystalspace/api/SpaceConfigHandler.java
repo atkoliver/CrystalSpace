@@ -160,7 +160,7 @@ public class SpaceConfigHandler {
     }
 
     /**
-     * Constructor of SpaceConfigHandler.
+     * Constructor of SpaceConfigHandler.te
      */
     protected SpaceConfigHandler() {
     }
