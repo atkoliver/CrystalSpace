@@ -9,8 +9,9 @@
 package com.crystalcraftmc.crystalspace.wgen.populators;
 
 import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -22,11 +23,11 @@ import java.util.Random;
  * @author kitskub
  */
 public class SpaceDataPopulator extends BlockPopulator {
-    public static Map<World, Map<WrappedCoords, Material>> coords = new HashMap<World, Map<WrappedCoords, Material>>();
+    public static Map<WorldInfo, Map<WrappedCoords, Material>> coords = new HashMap<WorldInfo, Map<WrappedCoords, Material>>();
     
-    public static void addCoords(World world, int chunkX, int chunkZ, int x, int y, int z, Material mat) {
-        if (coords.get(world) == null) {
-            coords.put(world, new HashMap<WrappedCoords, Material>());
+    public static void addCoords(WorldInfo worldInfo, int chunkX, int chunkZ, int x, int y, int z, Material mat) {
+        if (coords.get(worldInfo) == null) {
+            coords.put(worldInfo, new HashMap<WrappedCoords, Material>());
         }
         WrappedCoords key = new WrappedCoords();
         key.chunkX = chunkX;
@@ -34,16 +35,16 @@ public class SpaceDataPopulator extends BlockPopulator {
         key.x = x;
         key.y = y;
         key.z = z;
-        coords.get(world).put(key, mat);
+        coords.get(worldInfo).put(key, mat);
     }
 
     @Override
-    public void populate(World world, Random random, Chunk chunk) {
-        if (coords.get(world) == null) return;
-        for (WrappedCoords c : coords.get(world).keySet()) {
-            if (c.chunkX == chunk.getX() && c.chunkZ == chunk.getZ()) {
-                chunk.getBlock(c.x, c.y, c.z).setType(coords.get(world).get(c));
-                //chunk.getBlock(c.x, c.y, c.z).setData(coords.get(world).get(c));
+    public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
+        if (coords.get(worldInfo) == null) return;
+        for (WrappedCoords c : coords.get(worldInfo).keySet()) {
+            if (c.chunkX == chunkX && c.chunkZ == chunkZ) {
+                limitedRegion.setType(c.x, c.y, c.z, coords.get(worldInfo).get(c));
+                //chunk.getBlock(c.x, c.y, c.z).setData(coords.get(worldInfo).get(c));
             }
         }
     }

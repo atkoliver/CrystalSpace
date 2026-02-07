@@ -144,7 +144,6 @@ public class SpaceSchematicHandler {
      * 
      * @param file Schematic file
      */
-    @SuppressWarnings("unchecked")
     public static void loadSchematic(File file) {
         try{
             FileInputStream fis = new FileInputStream(file);

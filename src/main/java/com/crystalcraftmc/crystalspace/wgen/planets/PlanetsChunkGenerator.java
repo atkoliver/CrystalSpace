@@ -20,6 +20,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +52,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     private Material floorBlock = Material.matchMaterial(SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getString("floorBlock", (String) SpaceConfig.Defaults.FLOOR_BLOCK.getDefault()));// BlockID for the floor
     private boolean bedrockEnabled = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("bedrockEnabled", (Boolean) SpaceConfig.Defaults.BEDROCK_ENABLED.getDefault()); // Bedrock layer at y=0
     private boolean ignoreInvalidBlockIds = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("ignoreInvalidBlockIds", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault()); // Ignore invalid block ids, i.e. typos and modded block ids
-    private static HashMap<World, List<Planetoid>> planets = new HashMap<World, List<Planetoid>>();
+    private static HashMap<WorldInfo, List<Planetoid>> planets = new HashMap<WorldInfo, List<Planetoid>>();
     private final String ID;
     private final boolean GENERATE;
 
@@ -86,9 +88,31 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     }
 
     /**
+     * Override non-important stuff
+     */
+    @Override
+    public void generateNoise(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) { }
+    @Override
+    public void generateSurface(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) { 
+        generateChunkData(worldInfo, random, chunkX, chunkZ, chunkData);
+    }
+    @Override
+    public void generateBedrock(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) { }
+    @Override
+    public void generateCaves(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) { }
+    @Override
+    public boolean shouldGenerateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ){ return false; }
+    @Override
+    public boolean shouldGenerateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ){ return false; }
+    @Override
+    public boolean shouldGenerateBedrock(){ return false; }
+    @Override
+    public boolean shouldGenerateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ){ return false; }
+
+    /**
      * Generates chunk data for a chunk.
      * 
-     * @param world
+     * @param worldInfo
      * @param random
      * @param x
      * @param z
@@ -96,19 +120,18 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @return 
      */
 
-    @Override
-    public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
-        if (!planets.containsKey(world)) {
-            planets.put(world, new ArrayList<Planetoid>());
+    //public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public ChunkData generateChunkData(WorldInfo worldInfo, Random random, int x, int z, ChunkGenerator.ChunkData chunkData) {
+        if (!planets.containsKey(worldInfo)) {
+            planets.put(worldInfo, new ArrayList<Planetoid>());
         }
         Material mat;
-        ChunkData cData = this.createChunkData(world);
         
         if (GENERATE) {
             MessageHandler.debugPrint(Level.INFO, "GENERATE == true, generating planet");
-            generatePlanetoids(world, x, z);
+            generatePlanetoids(worldInfo, x, z);
             // Go through the current system's planetoids and fill in this chunk as needed.
-            for (Planetoid curPl : planets.get(world)) {
+            for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
                 int relCenterX = curPl.xPos - x * 16;
                 int relCenterZ = curPl.zPos - z * 16;
@@ -145,9 +168,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                     } else {
                                         mat = getRandomMaterial(random, curPl.coreBlkIds);
                                     }
-                                    cData.setBlock(chunkX, worldY, chunkZ, mat);
+                                    chunkData.setBlock(chunkX, worldY, chunkZ, mat);
                                     if (mat != null) { //Has data
-                                         SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, mat);
+                                         SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
                                     }
                                 }
                             }
@@ -162,16 +185,16 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             for (int floorX = 0; floorX < 16; floorX++) {
                 for (int floorZ = 0; floorZ < 16; floorZ++) {
                     if (bedrockEnabled == true && floorY == 0) {
-                        cData.setBlock(floorX, floorY, floorZ, Material.BEDROCK);
+                        chunkData.setBlock(floorX, floorY, floorZ, Material.BEDROCK);
                         //setBlock(retVal, floorX, floorY, floorZ, (byte) Material.BEDROCK.getId());
                     } else {
-                        cData.setBlock(floorX, floorY, floorZ, floorBlock);
+                        chunkData.setBlock(floorX, floorY, floorZ, floorBlock);
                         //setBlock(retVal, floorX, floorY, floorZ, (byte) floorBlock.getId());
                     }
                 }
             }
         }
-        return cData;
+        return chunkData;
     }
 
     /**
@@ -188,24 +211,24 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     /**
      * Generates a world.
      * 
-     * @param world World
+     * @param worldInfo WorldInfo
      * @param random Random
      * @param x X-pos
      * @param z Z-pos
      * @param biomes 
      * @return Byte array
      */
-    public byte[][] generateBlockSections(World world, Random random, int x, int z, BiomeGrid biomes){
-        if (!planets.containsKey(world)) {
-            planets.put(world, new ArrayList<Planetoid>());
+    public byte[][] generateBlockSections(WorldInfo worldInfo, Random random, int x, int z, BiomeGrid biomes){
+        if (!planets.containsKey(worldInfo)) {
+            planets.put(worldInfo, new ArrayList<Planetoid>());
         }
         Material mat;
-        byte[][] retVal = new byte[world.getMaxHeight() / 16][];
+        byte[][] retVal = new byte[worldInfo.getMaxHeight() / 16][];
 
         if (GENERATE) {
-            generatePlanetoids(world, x, z);
+            generatePlanetoids(worldInfo, x, z);
             // Go through the current system's planetoids and fill in this chunk as needed.
-            for (Planetoid curPl : planets.get(world)) {
+            for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
                 int relCenterX = curPl.xPos - x * 16;
                 int relCenterZ = curPl.zPos - z * 16;
@@ -244,7 +267,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                     }
                                     setBlock(retVal, chunkX, worldY, chunkZ, (byte) mat.ordinal());
                                     if (mat.ordinal() != 0) { //Has data
-                                         SpaceDataPopulator.addCoords(world, x, z, chunkX, worldY, chunkZ, mat);
+                                         SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
                                     }
                                 }
                             }
@@ -279,7 +302,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @param blkid 
      * @deprecated ChunkGenerator.ChunkData.setBlock for 1.8+
      */
-    static void setBlock(byte[][] result, int x, int y, int z, byte blkid) {
+    void setBlock(byte[][] result, int x, int y, int z, byte blkid) {
         if (result[y >> 4] == null) {
             result[y >> 4] = new byte[4096];
         }
@@ -289,13 +312,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     /**
      * Generates planets.
      * 
-     * @param world World
+     * @param worldInfo WorldInfo
      * @param x X-pos
      * @param z Z-pos
      */
     @SuppressWarnings("fallthrough")
-    private void generatePlanetoids(World world, int x, int z) {
-        long seed = world.getSeed();
+    private void generatePlanetoids(WorldInfo worldInfo, int x, int z) {
+        long seed = worldInfo.getSeed();
         List<Planetoid> planetoids = new ArrayList<Planetoid>();
 //        //Seed shift;
 //        // if X is negative, left shift seed by one
@@ -316,12 +339,12 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             spawnPl.shellBlkIds = new ArrayList<Material>(Collections.singleton(Material.matchMaterial("LEAVES")));
             spawnPl.shellThickness = 3;
             spawnPl.radius = 6;
-            planets.get(world).add(spawnPl);
+            planets.get(worldInfo).add(spawnPl);
         }
 
         //x = (x*16) - minDistance;
         //z = (z*16) - minDistance;
-        Random rand = new Random(getSeed(world, x, 0, z, 0));
+        Random rand = new Random(getSeed(worldInfo, x, 0, z, 0));
 //        for (int i = 0; i < Math.abs(x) + Math.abs(z); i++) {
 //            // cycle generator
 //            rand.nextInt();
@@ -344,7 +367,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 
             // Set position
             curPl.xPos = (x * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
-            int randInt = world.getMaxHeight() - curPl.radius * 2 - floorHeight;
+            int randInt = worldInfo.getMaxHeight() - curPl.radius * 2 - floorHeight;
             curPl.yPos = rand.nextInt(randInt >= 0 ? randInt : 0) + curPl.radius + floorHeight;
             curPl.zPos = (z * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
 
@@ -363,8 +386,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                 }
             }
             if (!planets.isEmpty()) {
-                if (!planets.get(world).isEmpty()) {
-                    List<Planetoid> tempPlanets = planets.get(world);
+                if (!planets.get(worldInfo).isEmpty()) {
+                    List<Planetoid> tempPlanets = planets.get(worldInfo);
                     for (Planetoid pl : tempPlanets) {
                         // each planetoid has to be at least pl1.radius + pl2.radius +
                         // min distance apart
@@ -380,7 +403,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                 planetoids.add(curPl);
             }
         }
-        planets.get(world).addAll(planetoids);
+        planets.get(worldInfo).addAll(planetoids);
     }
 
     @Override
@@ -424,7 +447,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private static HashMap<ArrayList<Material>, Float> getBlocklistChances(List<String> readList){
+    private HashMap<ArrayList<Material>, Float> getBlocklistChances(List<String> readList){
         HashMap<ArrayList<Material>, Float> blocklistChances = new HashMap<ArrayList<Material>, Float>();
         for (String s : readList) {
             String[] sSplit = s.replaceAll("\\s","").split("-");
@@ -441,7 +464,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         return blocklistChances;
     }
 
-    private static ArrayList<Material> makeBlocklist(String[] mats) {
+    private ArrayList<Material> makeBlocklist(String[] mats) {
         ArrayList<Material> matList = new ArrayList<Material>();
         for (String s : mats) {
             int data = 0;
@@ -574,8 +597,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         return new Location(world, 7, 78, 7);
     }
     
-    private final static int HASH_SHIFT = 19;
-    private final static long HASH_SHIFT_MASK = (1L << HASH_SHIFT) - 1;
+    private final int HASH_SHIFT = 19;
+    private final long HASH_SHIFT_MASK = (1L << HASH_SHIFT) - 1;
 
     /**
      * Returns the particular seed a Random should use for a position
@@ -588,15 +611,15 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * The extra seed allows multiple Randoms to be returned for the same
      * position for use by populators and different stages of generation.
      *
-     * @param world the World
+     * @param worldInfo the World
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
      * @param extraSeed the extra seed value
      * @return the seed 
      */
-    public static long getSeed(World world, int x, int y, int z, int extraSeed) {
-            long hash = world.getSeed();
+    public long getSeed(WorldInfo worldInfo, int x, int y, int z, int extraSeed) {
+            long hash = worldInfo.getSeed();
             hash += (hash << HASH_SHIFT) + (hash >> 64 - HASH_SHIFT & HASH_SHIFT_MASK) + extraSeed;
             hash += (hash << HASH_SHIFT) + (hash >> 64 - HASH_SHIFT & HASH_SHIFT_MASK) + x;
             hash += (hash << HASH_SHIFT) + (hash >> 64 - HASH_SHIFT & HASH_SHIFT_MASK) + y;

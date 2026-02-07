@@ -91,7 +91,6 @@ release.properties
 ### Gradle
 .gradle/
 build/
-gradle/
 logs/
 
 ### VSCode settings
