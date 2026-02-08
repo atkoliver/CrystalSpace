@@ -19,9 +19,9 @@ if %error% == 1 ( exit /b 1 )
 
 :: Check if folder exists
 if not exist "server-%~1\" (
-    mkdir "server-%~1"
-    echo eula=true >> "server-%~1\eula.txt"
-    copy "server.properties.defaults" "server-%~1\server.properties"
+    mkdir server-%~1
+    echo eula=true >> server-%~1\eula.txt
+    copy server.properties.defaults server-%~1\server.properties
 )
 :: Check if jar exists.
 if not exist "server-%~1\server-%~2-%~1.jar" (

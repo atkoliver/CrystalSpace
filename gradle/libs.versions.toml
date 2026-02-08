@@ -2,11 +2,11 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-org-bukkit-bukkit = "1.10-R0.1-SNAPSHOT"
+org-bukkit-bukkit = "1.21.11-R0.1-SNAPSHOT"
+org-spigotmc-spigot-api = "1.21.11-R0.1-SNAPSHOT"
 # org-mcstats-bukkit-metrics-lite = "R8-SNAPSHOT"
-org-spigotmc-spigot-api = "1.10-R0.1-SNAPSHOT"
 
 [libraries]
 org-bukkit-bukkit = { module = "org.bukkit:bukkit", version.ref = "org-bukkit-bukkit" }
-# org-mcstats-bukkit-metrics-lite = { module = "org.mcstats.bukkit:metrics-lite", version.ref = "org-mcstats-bukkit-metrics-lite" }
 org-spigotmc-spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "org-spigotmc-spigot-api" }
+# org-mcstats-bukkit-metrics-lite = { module = "org.mcstats.bukkit:metrics-lite", version.ref = "org-mcstats-bukkit-metrics-lite" }

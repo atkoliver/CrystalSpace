@@ -7,7 +7,7 @@
       "type": "shell",
       "args": [
         "/c",
-        "start-server.bat",
+        "start-server.sh",
         "1.21.11",
         "paper"
       ],
