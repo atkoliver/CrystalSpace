@@ -487,7 +487,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                 if (newMat.isBlock()) {
                     matList.add(newMat);
                 } else {
-                    MessageHandler.print(Level.WARNING, newMat.toString() + " is not a block");
+                    MessageHandler.print(Level.WARNING, newMat.toString() + " is not a valid block!");
                 }
             }
             else if (ignoreInvalidBlockIds == false) { //Do we ignore bad ids?
@@ -500,7 +500,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             else { // Bad block id! Typically a typo
                 MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
             }
-            
+        }
+        if (matList.size() == 0) {
+            matList.add(Material.AIR)
         }
         return matList;
     }

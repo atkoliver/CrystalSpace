@@ -19,7 +19,7 @@
             "echo": true,
             "reveal": "always",
             "focus": true,
-            "panel": "new",
+            "panel": "new"
         },
         "isBackground": true,
         "group": "none",
@@ -36,7 +36,7 @@
             "background": {
                 "activeOnStart": false,
                 "beginsPattern": "Starting",
-                "endsPattern": ".",
+                "endsPattern": "."
             }
             }
         ]
