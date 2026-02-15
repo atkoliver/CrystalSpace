@@ -28,42 +28,40 @@ maxShellSize: 20
 # All have the option of having a set probability or not
 # Data values are optional
 # Can be in the following formats:
-#   - WOOL:12 *FULLY QUALIFIED NAME
-#   - 43:12   *VANILLA
-#   - STONE,DIRT-1.0 *MULTIPLE NAMES with probability
-#   - 1654:12 *(NOT A VANILLA ID)
+#   - STONE-0.5 *SINGLE NAME, WITH 50% PROBABILITY
+#   - STONE,DIRT-1.0 *MULTIPLE NAMES, WITH 100% PROBABILITY
+#   - STONE,STONE,STONE,DIRT-1.0 *75% BLOCKS STONE, 25% BLOCKS DIRT, with 100% PROBABILITY
+#   - EXOSUPERBLOCK-1.0 *NOT A VANILLA BLOCK, IF ignoreInvalidBlockIds TRUE, IT WILL BE IGNORED
 blocks:
-    # 1 is 100%; 0 is 0%
-    # Planet shells & probabilities
+    # 1.0 is 100% chance; 0.0 is 0% chance
+    # Planet shells
     shells:
     - STONE,DIRT-1.0
     - STONE-1.0
     - DIRT-1.0
-    - LEAVES-0.9
+    - OAK_LEAVES-0.9
     - ICE-0.9
-    - SNOW_BLOCK-0.9
-    - GLOWSTONE-0.4
-    - BRICK-0.6
-    - SANDSTONE-0.8
-    - OBSIDIAN-0.5
-    - MOSSY_COBBLESTONE-0.3
-    - WOOL-0.4
     - GLASS-0.9
-    # TODO: Fix "new" blocks e.g. Quartz not being recognized even by ID? Bukkit limitation? :/
-    - 155:0-1.0
-    # Planet cores & probabilities
+    - SNOW_BLOCK-0.9
+    - SANDSTONE-0.8
+    - BRICK-0.6
+    - OBSIDIAN-0.5
+    - WHITE_WOOL-0.4
+    - GLOWSTONE-0.4
+    - MOSSY_COBBLESTONE-0.3
+    # Planet cores
     cores:
-    - PUMPKIN-0.8
-    - STATIONARY_LAVA-0.8
-    - STATIONARY_WATER-1.0
+    - BEDROCK-0.5
+    - LAVA-0.8
+    - WATER-1.0
     - COAL_ORE-1.0
     - IRON_ORE-0.8
-    - DIAMOND_ORE-0.4
-    - CLAY-0.3
-    - LAPIS_ORE-0.4
-    - LOG-1.0
-    - GOLD_ORE-0.6
     - REDSTONE_ORE-0.75
+    - GOLD_ORE-0.6
+    - LAPIS_ORE-0.4
+    - DIAMOND_ORE-0.4
+    - OAK_LOG-1.0
+    - PUMPKIN-0.8
     - SAND-1.0
-    - BEDROCK-0.5
+    - CLAY-0.3
     - AIR-1.0

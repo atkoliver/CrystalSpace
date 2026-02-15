@@ -125,17 +125,16 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         if (!planets.containsKey(worldInfo)) {
             planets.put(worldInfo, new ArrayList<Planetoid>());
         }
-        Material mat;
         
         if (GENERATE) {
             MessageHandler.debugPrint(Level.INFO, "GENERATE == true, generating planet");
             generatePlanetoids(worldInfo, x, z);
+            Material mat;
             // Go through the current system's planetoids and fill in this chunk as needed.
             for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
                 int relCenterX = curPl.xPos - x * 16;
                 int relCenterZ = curPl.zPos - z * 16;
-
                 for (int curX = -curPl.radius; curX <= curPl.radius; curX++) {//Iterate across every x block
                     boolean xShell = false;//Is part of the x shell
                     int chunkX = curX + relCenterX;
@@ -168,9 +167,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                     } else {
                                         mat = getRandomMaterial(random, curPl.coreBlkIds);
                                     }
-                                    chunkData.setBlock(chunkX, worldY, chunkZ, mat);
                                     if (mat != null) { //Has data
-                                         SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
+                                        chunkData.setBlock(chunkX, worldY, chunkZ, mat);
+                                        SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
                                     }
                                 }
                             }
@@ -198,13 +197,12 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Selects random Material from blocks and returns it
+     * Selects random Material from a list and returns it
      * 
      * @param blocks ArrayList<Material>
      */
     Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
-        //Example in planets.yml: "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
-        //The example 'blocks' array would then be: [STONE, COBBLESTONE, DIRT, DIRT, DIRT] (1.0 is the chance that this blocklist gets selected, after the blocklist is randomly chosen)
+        //Example (from planets.yml): "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
         return blocks.get(random.nextInt(blocks.size()));
     }
 
@@ -227,7 +225,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 
         if (GENERATE) {
             generatePlanetoids(worldInfo, x, z);
-            // Go through the current system's planetoids and fill in this chunk as needed.
+            // Go through current system's planetoids and fill in this chunk as needed.
             for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
                 int relCenterX = curPl.xPos - x * 16;
@@ -309,6 +307,20 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         result[y >> 4][((y & 0xF) << 8) | (z << 4) | x] = blkid;
     }
 
+    //TODO: Add toggle option in worlds.yml. Allow custom planet settings
+    private void generateSpawnPlanet(WorldInfo worldInfo){
+        // Generate a log/leaf planet close to 0,0
+        Planetoid spawnPl = new Planetoid();
+        spawnPl.coreBlkIds = new ArrayList<Material>(); spawnPl.coreBlkIds.add(Material.OAK_LOG);
+        spawnPl.shellBlkIds = new ArrayList<Material>(); spawnPl.shellBlkIds.add(Material.OAK_LEAVES);
+        spawnPl.shellThickness = 3;
+        spawnPl.radius = 6;
+        spawnPl.xPos = spawnPl.radius;
+        spawnPl.yPos = 64+spawnPl.radius;
+        spawnPl.zPos = spawnPl.radius;
+        planets.get(worldInfo).add(spawnPl);
+    }
+
     /**
      * Generates planets.
      * 
@@ -316,7 +328,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @param x X-pos
      * @param z Z-pos
      */
-    @SuppressWarnings("fallthrough")
     private void generatePlanetoids(WorldInfo worldInfo, int x, int z) {
         long seed = worldInfo.getSeed();
         List<Planetoid> planetoids = new ArrayList<Planetoid>();
@@ -328,19 +339,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 //        if (z < 0) {
 //            seed = -seed;
 //        }
-
-        // If x and Z are zero, generate a log/leaf planet close to 0,0
-        if (x == 0 && z == 0) {
-            Planetoid spawnPl = new Planetoid();
-            spawnPl.xPos = 7;
-            spawnPl.yPos = 70;
-            spawnPl.zPos = 7;
-            spawnPl.coreBlkIds = new ArrayList<Material>(Collections.singleton(Material.matchMaterial("LOG")));
-            spawnPl.shellBlkIds = new ArrayList<Material>(Collections.singleton(Material.matchMaterial("LEAVES")));
-            spawnPl.shellThickness = 3;
-            spawnPl.radius = 6;
-            planets.get(worldInfo).add(spawnPl);
-        }
 
         //x = (x*16) - minDistance;
         //z = (z*16) - minDistance;
@@ -467,42 +465,33 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     private ArrayList<Material> makeBlocklist(String[] mats) {
         ArrayList<Material> matList = new ArrayList<Material>();
         for (String s : mats) {
-            int data = 0;
             String name = "";
             if(s.split(":").length == 2){
-                try {
-                    name = s.split(":")[0];
-                    data = Integer.parseInt(s.split(":")[1]);
-                } catch (NumberFormatException numberFormatException) {
-                    MessageHandler.print(Level.WARNING, "Invalid core block in planets.yml");
-                }
+                name = s.split(":")[0];
             }
-            else{
+            else {
                 name = s;
             }
             MessageHandler.debugPrint(Level.INFO, "Trying to match material with name: " + name);
             Material newMat = Material.matchMaterial(name);
 
-            if(newMat != null){//Vanilla material
-                if (newMat.isBlock()) {
+            if(newMat != null) {
+                if (newMat.isBlock()) { //Vanilla block
                     matList.add(newMat);
-                } else {
-                    MessageHandler.print(Level.WARNING, newMat.toString() + " is not a valid block!");
                 }
-            }
-            else if (ignoreInvalidBlockIds == false) { //Do we ignore bad ids?
-                try {
+                else if (ignoreInvalidBlockIds == false) { //If true: we accept unknown blocks (typo or modded) 
                     matList.add(newMat);
-                } catch (NumberFormatException numberFormatException) {
+                }
+                else { // Bad block! Probably a typo
                     MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
                 }
             }
-            else { // Bad block id! Typically a typo
+            else { 
                 MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
             }
         }
         if (matList.size() == 0) {
-            matList.add(Material.AIR)
+            matList.add(Material.AIR);
         }
         return matList;
     }

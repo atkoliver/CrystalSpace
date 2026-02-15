@@ -247,25 +247,27 @@ public class SpaceSchematicHandler {
     private static Map<Location, Map<Material, BlockData>> getBlocksMap(Schematic schematic, Location origin){
         Map<Location, Map<Material, BlockData>> blocksMap = new HashMap<Location, Map<Material, BlockData>>();
         int width = schematic.getWidth(); int height = schematic.getHeight(); int length = schematic.getLength();
+        boolean readerror = false;
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 for (int z = 0; z < length; ++z) {
                     int index = y * width * length + z * width + x;
-                    //Material block = Material.getMaterial(schematic.getBlocks()[index]);
-                    Material block = Material.OAK_LOG; //Bandaid fix until I figure out what to do
-                    BlockData blockData = null;
                     try {
                         //PROBLEM: How to construct BlockData from the (byte) data from schematic? How is (byte) data formatted?
                         //TODO (SOLUTION?): Use schematic loader from Worledit instead. Then I'll have code that works.
                         //blockData = new BlockData(block, schematic.getBlockData()[index]);
-                        
+                        //Material block = Material.getMaterial(schematic.getBlocks()[index]);
+                        Material block = Material.OAK_LOG;
                         //This is a temporary workaround. Problem: This won't copy blockdata like chest contents from schematic.
-                        blockData = block.createBlockData();
-                    } catch (Exception ex) {
+                        BlockData blockData = block.createBlockData();
+                        Map<Material, BlockData> tempMap = new EnumMap<Material, BlockData>(Material.class);
+                        tempMap.put(block, blockData);
+                        blocksMap.put(new Location(origin.getWorld(), x, y, z), tempMap);
+                    } catch (Exception e) {
+                        if (!readerror) {
+                            MessageHandler.print(Level.WARNING, "Unreadable block(s) in this schematic:" + e.getMessage());
+                        }
                     }
-                    Map<Material, BlockData> tempMap = new EnumMap<Material, BlockData>(Material.class);
-                    tempMap.put(block, blockData);
-                    blocksMap.put(new Location(origin.getWorld(), x, y, z), tempMap);
                 }
             }
         }
