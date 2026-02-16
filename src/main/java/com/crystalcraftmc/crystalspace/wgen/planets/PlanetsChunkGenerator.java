@@ -114,44 +114,43 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * 
      * @param worldInfo
      * @param random
-     * @param x
-     * @param z
+     * @param chunkX
+     * @param chunkZ
      * @param biome
      * @return 
      */
 
-    //public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
-    public ChunkData generateChunkData(WorldInfo worldInfo, Random random, int x, int z, ChunkGenerator.ChunkData chunkData) {
+    public ChunkData generateChunkData(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, ChunkGenerator.ChunkData chunkData) {
         if (!planets.containsKey(worldInfo)) {
             planets.put(worldInfo, new ArrayList<Planetoid>());
         }
         
         if (GENERATE) {
             MessageHandler.debugPrint(Level.INFO, "GENERATE == true, generating planet");
-            generatePlanetoids(worldInfo, x, z);
+            generatePlanetoids(worldInfo, chunkX, chunkZ);
             Material mat;
             // Go through the current system's planetoids and fill in this chunk as needed.
             for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
-                int relCenterX = curPl.xPos - x * 16;
-                int relCenterZ = curPl.zPos - z * 16;
+                int relCenterX = curPl.xPos - chunkX * 16;
+                int relCenterZ = curPl.zPos - chunkZ * 16;
                 for (int curX = -curPl.radius; curX <= curPl.radius; curX++) {//Iterate across every x block
-                    boolean xShell = false;//Is part of the x shell
-                    int chunkX = curX + relCenterX;
-                    if (chunkX >= 0 && chunkX < 16) {
-                        int worldX = curX + curPl.xPos;//get the x block number in the world
-                        // Figure out radius of this circle
+                    boolean xShell = false; //Shell or core block
+                    int relativeX = curX + relCenterX;
+                    if (relativeX >= 0 && relativeX < 16) {
+                        int worldX = curX + curPl.xPos;//Get the x coordinate
+                        // Find radius of this circle
                         int distFromCenter = Math.abs(curX);//Distance from center in the x 
                         if (curPl.radius - distFromCenter < curPl.shellThickness) {//Check if part of xShell
                             xShell = true;
                         }
                         int zHalfLength = (int) Math.ceil(Math.sqrt((curPl.radius * curPl.radius) - (distFromCenter * distFromCenter)));//Half the amount of blocks in the z direction
                         for (int curZ = -zHalfLength; curZ <= zHalfLength; curZ++) {//Iterate over all z blocks 
-                            int chunkZ = curZ + relCenterZ;
-                            if (chunkZ >= 0 && chunkZ < 16) {
-                                int worldZ = curZ + curPl.zPos;//get the z block number in the world
-                                boolean zShell = false;//Is part of z shell
-                                int zDistFromCenter = Math.abs(curZ);//Distance from center in the z
+                            int relativeZ = curZ + relCenterZ;
+                            if (relativeZ >= 0 && relativeZ < 16) {
+                                int worldZ = curZ + curPl.zPos; //Get the z coordinate
+                                boolean zShell = false; //Shell or core block
+                                int zDistFromCenter = Math.abs(curZ); //Distance from center in the z
                                 if (zHalfLength - zDistFromCenter < curPl.shellThickness) {//Check if part of zShell
                                     zShell = true;
                                 }
@@ -168,8 +167,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                         mat = getRandomMaterial(random, curPl.coreBlkIds);
                                     }
                                     if (mat != null) { //Has data
-                                        chunkData.setBlock(chunkX, worldY, chunkZ, mat);
-                                        SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
+                                        chunkData.setBlock(relativeX, worldY, relativeZ, mat);
+                                        SpaceDataPopulator.addCoords(worldInfo, chunkX, chunkZ, worldX, worldY, worldZ, mat);
                                     }
                                 }
                             }
@@ -185,10 +184,8 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                 for (int floorZ = 0; floorZ < 16; floorZ++) {
                     if (bedrockEnabled == true && floorY == 0) {
                         chunkData.setBlock(floorX, floorY, floorZ, Material.BEDROCK);
-                        //setBlock(retVal, floorX, floorY, floorZ, (byte) Material.BEDROCK.getId());
                     } else {
                         chunkData.setBlock(floorX, floorY, floorZ, floorBlock);
-                        //setBlock(retVal, floorX, floorY, floorZ, (byte) floorBlock.getId());
                     }
                 }
             }
@@ -204,107 +201,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
         //Example (from planets.yml): "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
         return blocks.get(random.nextInt(blocks.size()));
-    }
-
-    /**
-     * Generates a world.
-     * 
-     * @param worldInfo WorldInfo
-     * @param random Random
-     * @param x X-pos
-     * @param z Z-pos
-     * @param biomes 
-     * @return Byte array
-     */
-    public byte[][] generateBlockSections(WorldInfo worldInfo, Random random, int x, int z, BiomeGrid biomes){
-        if (!planets.containsKey(worldInfo)) {
-            planets.put(worldInfo, new ArrayList<Planetoid>());
-        }
-        Material mat;
-        byte[][] retVal = new byte[worldInfo.getMaxHeight() / 16][];
-
-        if (GENERATE) {
-            generatePlanetoids(worldInfo, x, z);
-            // Go through current system's planetoids and fill in this chunk as needed.
-            for (Planetoid curPl : planets.get(worldInfo)) {
-                // Find planet's center point relative to this chunk.
-                int relCenterX = curPl.xPos - x * 16;
-                int relCenterZ = curPl.zPos - z * 16;
-
-                for (int curX = -curPl.radius; curX <= curPl.radius; curX++) {//Iterate across every x block
-                    boolean xShell = false;//Is part of the x shell
-                    int chunkX = curX + relCenterX;
-                    if (chunkX >= 0 && chunkX < 16) {
-                        int worldX = curX + curPl.xPos;//get the x block number in the world
-                        // Figure out radius of this circle
-                        int distFromCenter = Math.abs(curX);//Distance from center in the x 
-                        if (curPl.radius - distFromCenter < curPl.shellThickness) {//Check if part of xShell
-                            xShell = true;
-                        }
-                        int zHalfLength = (int) Math.ceil(Math.sqrt((curPl.radius * curPl.radius) - (distFromCenter * distFromCenter)));//Half the amount of blocks in the z direction
-                        for (int curZ = -zHalfLength; curZ <= zHalfLength; curZ++) {//Iterate over all z blocks 
-                            int chunkZ = curZ + relCenterZ;
-                            if (chunkZ >= 0 && chunkZ < 16) {
-                                int worldZ = curZ + curPl.zPos;//get the z block number in the world
-                                boolean zShell = false;//Is part of z shell
-                                int zDistFromCenter = Math.abs(curZ);//Distance from center in the z
-                                if (zHalfLength - zDistFromCenter < curPl.shellThickness) {//Check if part of zShell
-                                    zShell = true;
-                                }
-                                int yHalfLength = (int) Math.ceil(Math.sqrt((zHalfLength * zHalfLength) - (zDistFromCenter * zDistFromCenter)));
-                                for (int curY = -yHalfLength; curY <= yHalfLength; curY++) {
-                                    int worldY = curY + curPl.yPos;
-                                    boolean yShell = false;
-                                    if (yHalfLength - Math.abs(curY) < curPl.shellThickness) {
-                                        yShell = true;
-                                    }
-                                    if (xShell || zShell || yShell) {
-                                        mat = getRandomMaterial(random, curPl.shellBlkIds);
-                                    } else {
-                                        mat = getRandomMaterial(random, curPl.coreBlkIds);
-                                    }
-                                    setBlock(retVal, chunkX, worldY, chunkZ, (byte) mat.ordinal());
-                                    if (mat.ordinal() != 0) { //Has data
-                                         SpaceDataPopulator.addCoords(worldInfo, x, z, chunkX, worldY, chunkZ, mat);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-        // Fill in the floor
-        for (int floorY = 0; floorY < floorHeight; floorY++) {
-            for (int floorX = 0; floorX < 16; floorX++) {
-                for (int floorZ = 0; floorZ < 16; floorZ++) {
-                    if (floorY == 0) {
-                        setBlock(retVal, floorX, floorY, floorZ, (byte) Material.BEDROCK.ordinal());
-                    } else {
-                        setBlock(retVal, floorX, floorY, floorZ, (byte) floorBlock.ordinal());
-                    }
-                }
-            }
-        }
-        return retVal;
-    }
-
-    /**
-     * Adds the block to the argument "result".
-     * 
-     * @param result
-     * @param x
-     * @param y
-     * @param z
-     * @param blkid 
-     * @deprecated ChunkGenerator.ChunkData.setBlock for 1.8+
-     */
-    void setBlock(byte[][] result, int x, int y, int z, byte blkid) {
-        if (result[y >> 4] == null) {
-            result[y >> 4] = new byte[4096];
-        }
-        result[y >> 4][((y & 0xF) << 8) | (z << 4) | x] = blkid;
     }
 
     //TODO: Add toggle option in worlds.yml. Allow custom planet settings
@@ -325,10 +221,10 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * Generates planets.
      * 
      * @param worldInfo WorldInfo
-     * @param x X-pos
-     * @param z Z-pos
+     * @param chunkX Chunk X
+     * @param chunkZ Chunk Z
      */
-    private void generatePlanetoids(WorldInfo worldInfo, int x, int z) {
+    private void generatePlanetoids(WorldInfo worldInfo, int chunkX, int chunkZ) {
         long seed = worldInfo.getSeed();
         List<Planetoid> planetoids = new ArrayList<Planetoid>();
 //        //Seed shift;
@@ -342,7 +238,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 
         //x = (x*16) - minDistance;
         //z = (z*16) - minDistance;
-        Random rand = new Random(getSeed(worldInfo, x, 0, z, 0));
+        Random rand = new Random(getSeed(worldInfo, chunkX, 0, chunkZ, 0));
 //        for (int i = 0; i < Math.abs(x) + Math.abs(z); i++) {
 //            // cycle generator
 //            rand.nextInt();
@@ -355,40 +251,31 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 //        }
 
         for (int i = 0; i < density; i++) {
-            // Try to make a planet
+            // Create planet
             Planetoid curPl = new Planetoid();
             curPl.shellBlkIds = getRandomShellBlocks(rand);
             curPl.coreBlkIds = getRandomCoreBlocks(rand);
-
             curPl.shellThickness = rand.nextInt(maxShellSize - minShellSize) + minShellSize;
             curPl.radius = rand.nextInt(maxSize - minSize) + minSize;
-
             // Set position
-            curPl.xPos = (x * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
-            int randInt = worldInfo.getMaxHeight() - curPl.radius * 2 - floorHeight;
-            curPl.yPos = rand.nextInt(randInt >= 0 ? randInt : 0) + curPl.radius + floorHeight;
-            curPl.zPos = (z * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
+            curPl.xPos = (chunkX * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
+            int maxY = worldInfo.getMaxHeight() - curPl.radius * 2 - floorHeight;
+            curPl.yPos = rand.nextInt(maxY >= 0 ? maxY : 0) + curPl.radius + floorHeight;
+            curPl.zPos = (chunkZ * 16) - minDistance + rand.nextInt(minDistance + 16 + minDistance);
 
-            // TODO: Check if this can be optimized. How large can the 'planetoids' list become?
-
-            // Created a planet, check for collisions with existing planets
-            // If any collision, discard planet
+            // If too close to other planet, discard planet
             boolean discard = false;
             for (Planetoid pl : planetoids) {
-                // each planetoid has to be at least pl1.radius + pl2.radius +
-                // min distance apart
                 int distMin = pl.radius + curPl.radius + minDistance;
                 if (distanceSquared(pl, curPl) < distMin * distMin) {
                     discard = true;
                     break;
                 }
-            }
+            } // TODO: Check if this can be optimized. How large can the 'planetoids' list become?
             if (!planets.isEmpty()) {
                 if (!planets.get(worldInfo).isEmpty()) {
                     List<Planetoid> tempPlanets = planets.get(worldInfo);
                     for (Planetoid pl : tempPlanets) {
-                        // each planetoid has to be at least pl1.radius + pl2.radius +
-                        // min distance apart
                         int distMin = pl.radius + curPl.radius + minDistance;
                         if (distanceSquared(pl, curPl) < distMin * distMin) {
                             discard = true;
@@ -397,6 +284,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     }
                 }
             }
+            
             if (!discard) {
                 planetoids.add(curPl);
             }

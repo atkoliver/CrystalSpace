@@ -41,10 +41,9 @@ public class SpaceDataPopulator extends BlockPopulator {
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
         if (coords.get(worldInfo) == null) return;
-        for (WrappedCoords c : coords.get(worldInfo).keySet()) {
-            if (c.chunkX == chunkX && c.chunkZ == chunkZ) {
+        for (WrappedCoords c : coords.get(worldInfo).keySet()) { //TODO: Replace WrappedCoords with Location. Same purpose, but already exists in bukkit.
+            if (c.chunkX == chunkX && c.chunkZ == chunkZ) { //TODO: Find way to optimize this
                 limitedRegion.setType(c.x, c.y, c.z, coords.get(worldInfo).get(c));
-                //chunk.getBlock(c.x, c.y, c.z).setData(coords.get(worldInfo).get(c));
             }
         }
     }
