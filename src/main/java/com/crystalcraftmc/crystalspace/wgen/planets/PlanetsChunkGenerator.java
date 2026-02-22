@@ -193,22 +193,14 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         return chunkData;
     }
 
-    /**
-     * Selects random Material from a list and returns it
-     * 
-     * @param blocks ArrayList<Material>
-     */
-    Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
-        //Example (from planets.yml): "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
-        return blocks.get(random.nextInt(blocks.size()));
-    }
-
     //TODO: Add toggle option in worlds.yml. Allow custom planet settings
     private void generateSpawnPlanet(WorldInfo worldInfo){
         // Generate a log/leaf planet close to 0,0
         Planetoid spawnPl = new Planetoid();
-        spawnPl.coreBlkIds = new ArrayList<Material>(); spawnPl.coreBlkIds.add(Material.OAK_LOG);
-        spawnPl.shellBlkIds = new ArrayList<Material>(); spawnPl.shellBlkIds.add(Material.OAK_LEAVES);
+        spawnPl.coreBlkIds = new ArrayList<Material>();
+        spawnPl.coreBlkIds.add(Material.OAK_LOG);
+        spawnPl.shellBlkIds = new ArrayList<Material>();
+        spawnPl.shellBlkIds.add(Material.OAK_LEAVES);
         spawnPl.shellThickness = 3;
         spawnPl.radius = 6;
         spawnPl.xPos = spawnPl.radius;
@@ -255,6 +247,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             Planetoid curPl = new Planetoid();
             curPl.shellBlkIds = getRandomShellBlocks(rand);
             curPl.coreBlkIds = getRandomCoreBlocks(rand);
+        
             curPl.shellThickness = rand.nextInt(maxShellSize - minShellSize) + minShellSize;
             curPl.radius = rand.nextInt(maxSize - minSize) + minSize;
             // Set position
@@ -402,29 +395,32 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     /**
      * Returns a valid block type.
      * 
-     * //@param randrandom generator to use
-     * @param core if true, searching through possible cores, otherwise possible shells
-     * //@param heated if true, will not return a block that gives off heat
+     * @param random
+     * @param blocks From 'planets.yml'. Example: "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
      * 
      * @return Material
      */
+    private Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
+        return blocks.get(random.nextInt(blocks.size()));
+    }
+
     private ArrayList<Material> getRandomCoreBlocks(Random rand) {
-        return getRandomBlockSet(rand, coreBlocklists);
+        return getRandomBlockList(rand, coreBlocklists);
     }
 
     private ArrayList<Material> getRandomShellBlocks(Random rand) {
-        return getRandomBlockSet(rand, shellBlocklists);
+        return getRandomBlockList(rand, shellBlocklists);
     }
 
-    private ArrayList<Material> getRandomBlockSet(Random rand, Map<ArrayList<Material>, Float> possibleBlock) {
-        ArrayList<Material> retVal = null;
-        //Select random material from possibleBlock
-        ArrayList<Material> planetMaterials = new ArrayList<ArrayList<Material>>(possibleBlock.keySet()).get(rand.nextInt(possibleBlock.size()));
-        //Test if planetMaterials' probability (float) is higher than random number (float)
-        if (possibleBlock.get(planetMaterials) > rand.nextFloat()) {
-            retVal = planetMaterials;
+    private ArrayList<Material> getRandomBlockList(Random rand, Map<ArrayList<Material>, Float> possibleBlockSets) {
+        while(true){ // Run until a list is selected
+            //Select a random list
+            ArrayList<Material> blockList = new ArrayList<ArrayList<Material>>(possibleBlockSets.keySet()).get(rand.nextInt(possibleBlockSets.size()));
+            //Check if blocks's probability (float) is higher than random number (float)
+            if (possibleBlockSets.get(blockList) > rand.nextFloat()) {
+                return blockList;
+            }
         }
-        return retVal;
     }
 
     /*TODO: Delete after checking getBlockTypes() new version works.
