@@ -18,6 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+//TODO: Evaluate deletion. Email kitskub about purpose of this.
+// PlanetsChunkGenerator originally placed blocks into this class's list.
+// Later, SpaceDataPopulator would get called to place these blocks.
+// I don't know why.
+// For now, I'm keeping this, maybe there was a good reason for this? If not, delete bloat file
+
 /**
  *
  * @author kitskub

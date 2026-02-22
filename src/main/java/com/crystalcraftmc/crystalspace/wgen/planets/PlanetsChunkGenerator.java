@@ -166,9 +166,11 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                     } else {
                                         mat = getRandomMaterial(random, curPl.coreBlkIds);
                                     }
-                                    if (mat != null) { //Has data
-                                        chunkData.setBlock(relativeX, worldY, relativeZ, mat);
-                                        SpaceDataPopulator.addCoords(worldInfo, chunkX, chunkZ, worldX, worldY, worldZ, mat);
+                                    if (mat != null) { //TODO: Evaluate deletion of this check. mat should never be null
+                                        //SpaceDataPopulator.addCoords(worldInfo, chunkX, chunkZ, worldX, worldY, worldZ, mat);
+                                        if (Material.isBlock(mat) || ignoreInvalidBlockIds == false) {
+                                            chunkData.setBlock(relativeX, worldY, relativeZ, mat);
+                                        }
                                     }
                                 }
                             }
@@ -297,7 +299,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         if (ConfigHandler.getGenerateSchematics(ID)) {
             populators.add(new SpaceSchematicPopulator());
         }
-        populators.add(new SpaceDataPopulator());
+        //populators.add(new SpaceDataPopulator());
         
         return populators;
     }
@@ -360,7 +362,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                 if (newMat.isBlock()) { //Vanilla block
                     matList.add(newMat);
                 }
-                else if (ignoreInvalidBlockIds == false) { //If true: we accept unknown blocks (typo or modded) 
+                else if (ignoreInvalidBlockIds) { //If true: we accept unknown blocks (typo or modded) 
                     matList.add(newMat);
                 }
                 else { // Bad block! Probably a typo
