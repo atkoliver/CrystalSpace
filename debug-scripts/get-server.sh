@@ -1,23 +1,11 @@
 #!/usr/bin/env bash
-# arg1 = MC-VERSION (select correct server.jar + select correct CrystalSpace test build)
+# arg1 = MC-VERSION (select correct server.jar + select correct DuzySpace test build)
 # arg2 = SERVER-VERSION (select correct server .jar)
 
 # TODO. Use Server-Verion Argument: CraftBukkit, Spigot, Sponge, Paper, Folia.
 #       Set correct URLs for finding latest build version $ver & downloading server jar $d
 #     servertype=$2
 #     if servertype == "spigot" then build=spigoturl.. etc..
-
-# Check if there are 2 arguments
-if [[ $1 == "" ]]; then
-    echo "[ERROR] $0: Missing argument MC-VERSION!";
-    echo "[ERROR] $0: Example: $0 1.21.11 paper";
-    exit 1
-fi
-if [[ $2 == "" ]]; then
-    echo "[ERROR] $0: Missing argument SERVER-TYPE!"
-    echo "[ERROR] $0: Example: $0 1.21.11 paper"
-    exit 1
-fi
 
 # Downloads latest paper build
 ver=$1

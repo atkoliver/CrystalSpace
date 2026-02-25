@@ -1,29 +1,37 @@
-Contributing to **CrystalSpace**
+Contributing to **DuzySpace**
 ================================
 
-As general housekeeping guidelines, we ask that you follow some of these basic guidelines and conventions for contributing code to CrystalSpace. If you do not follow these guidelines, there may be a delay in your pull request being merged, or possibly rejected.
+## Scope
+The goal of this plugin is to provide a space world generator. I will add any commits that aid in this direction. Improving the debug scripts is also encouraged.
 
-## Commiting
+Gameplay is outside the scope of this plugin. If you want to add gameplay mechanics like blackholes or spacesuits, you must do so in a seperate plugin.
 
-* Make sure your commits do not include any arbitrary files (e.g. IDE-specific files)
-* Keep commits lean and few - keep them to a minimum and squash commits if needed (see: `git rebase -i`)
+However, I encourage you to make such plugins! If it's really good, I may link to it from the github & plugin page.
 
-## Formatting
+## Commit Checklist
 
-* Limit lines to 120 characters before they start a new line (most IDEs have settings for this)
-* JavaDocs are expected for major contributions
- * If you think it might need a comment, you're right
-* Organize imports alphabetically
+Before you make a pull request, check:
 
-## Credit
+* Keep commits readable and moderate in size.
+  --> If you think it needs a comment, you're right
 
-* If contributing more than a "simple fix", add your name to the authors list in `plugin.yml`
-* If you make major changes to a class, add an `@author` JavaDocs tag
+* Test your code on a live server, and then fix the bugs!
+  --> You're the plumber and lord of your own commit. 
 
-## Testing
+* If you're happy about your code, add yourself to the credits :D
+  --> How To Credit: Add your name to the authors list in 'plugin.yml' & add an `@author` JavaDocs of the modified class
 
-* Pull requests should be tested before submission
- * "Does it compile?"
- * "Does the plugin run on the latest Spigot server?"
 
-Follow the above conventions if you want your pull requests accepted.
+## The AWESOME Debug Script
+To make it easy for you to contribute to the plugin, I created the 'start-server' script in the 'debug-scripts/' folder. When set up, it saves you a ton of time so you can focus on programming.
+
+I HIGHLY recommend you use my debug script, because it lets you do LIVE DEBUGGING on a running server! Certain bugs ONLY be detected and solved with live debugging.
+
+The debug script:
+* Automatically downloads server
+* Copies latest compiled jar into server folder
+* Runs server, AND listens for the live debugger.
+
+I made VSCodium configs (.vscode-windows/ and .vscode-linux/) so you can immediately run the script from VSCodium and attach its live debugger to the server. The relevant folder must be copied out to the root folder and renamed '.vscode'.
+
+You may use and adjust the script for any other plugins you want.

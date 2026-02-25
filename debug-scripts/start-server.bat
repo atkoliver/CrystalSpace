@@ -1,5 +1,5 @@
 @echo off
-:: arg1 = MC-VERSION (select correct server.jar + select correct CrystalSpace test build)
+:: arg1 = MC-VERSION (select correct server.jar + select correct DuzySpace test build)
 :: arg2 = SERVER-VERSION (select correct server .jar)
 
 :: Check if there are 2 arguments
@@ -32,7 +32,7 @@ if not exist "server-%~1\server-%~2-%~1.jar" (
 cd server-%~1\
 
 :: Copy latest plugin build
-copy /Y ..\..\build\libs\CrystalSpace-%1.jar plugins\CrystalSpaceTestBuild.jar
+copy /Y ..\..\build\libs\DuzySpace-%1.jar plugins\DuzySpaceTestBuild.jar
 
 :: arg1 = Open up server for remote debugger	= -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 :: arg2 = Optimization for server		= -XX+Always [...] etc  

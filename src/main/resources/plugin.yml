@@ -1,12 +1,12 @@
-# CrystalSpace - plugin.yml
+# DuzySpace - plugin.yml
 # All developers/contributors are here!
 
-name: CrystalSpace
-main: com.crystalcraftmc.crystalspace.Space
+name: DuzySpace
+main: com.atkoliver.duzyspace.Space
 version: 3.1.0
 api-version: '1.21'
 authors: [kitskub, iffa, SwearWord, HACKhalo2, Canis85, BR, jflory7, Jacc734, Jwood9198, atkoliver ]
-website: https://github.com/atkoliver/CrystalSpace
+website: https://github.com/atkoliver/DuzySpace
 # jenkins-url:
 
 # Load on startup for bukkit.yml, and all that support
@@ -22,38 +22,38 @@ commands:
           /<command> <back> - Go back where you were
           /<command> <list> - Lists all spaceworlds (loaded with config.yml)
           /<command> <help> - Shows help (usage)
-          /<command> <about> - About CrystalSpace
+          /<command> <about> - About DuzySpace
 
 # Permission nodes
 permissions:
   
   # All command permissions group
-  CrystalSpace.commands.*:
-    description: Access to all CrystalSpace commands.
+  DuzySpace.commands.*:
+    description: Access to all DuzySpace commands.
     children:
-      CrystalSpace.teleport.*: true
+      DuzySpace.teleport.*: true
   
   # Ignores
-  CrystalSpace.ignore.*:
+  DuzySpace.ignore.*:
     description: Access to all ignore permissions (currently, only "ignore suit check").
     children:
-      CrystalSpace.ignoresuitchecks: true
+      DuzySpace.ignoresuitchecks: true
   
   # Teleport
-  CrystalSpace.teleport.*:
+  DuzySpace.teleport.*:
     description: Access to all teleportation commands.
     children:
-      CrystalSpace.teleport.enter: true
-      CrystalSpace.teleport.exit: true
-      CrystalSpace.teleport.list: true
+      DuzySpace.teleport.enter: true
+      DuzySpace.teleport.exit: true
+      DuzySpace.teleport.list: true
   
   # Single permissions
-  CrystalSpace.teleport.enter:
+  DuzySpace.teleport.enter:
     description: Allows teleporting to space.
     default: op
-  CrystalSpace.teleport.exit:
+  DuzySpace.teleport.exit:
     description: Allows teleporting out of space.
     default: op
-  CrystalSpace.teleport.list:
+  DuzySpace.teleport.list:
     description: Allows requesting list of spaceworlds.
     default: op
