@@ -1,5 +1,5 @@
 @echo off
-:: arg1 = MC-VERSION (select correct server.jar + select correct CrystalSpace test build)
+:: arg1 = MC-VERSION (select correct server.jar + select correct DuzySpace test build)
 :: arg2 = SERVER-VERSION (select correct server .jar)
 
 ::TODO. Use Server-Verion Argument: CraftBukkit, Spigot, Sponge, Paper, Folia.
@@ -9,7 +9,6 @@
 set commands="$ver=\"%~1\"; $build=(irm https://api.papermc.io/v2/projects/paper/versions/$ver).builds[-1]; $url=\"https://api.papermc.io/v2/projects/paper/versions/$ver/builds/$build/downloads/paper-$ver-$build.jar\"; iwr $url -OutFile \"./server-$ver/server-paper-$ver.jar\";"
 
 powershell -c %commands%
-
 
 if exist "./server-$ver/server-paper-$ver.jar" (
   echo Downloaded latest %~1 paper build version $build

@@ -1,4 +1,4 @@
-# CrystalSpace v3.0.0-ALPHA - IDs File
+# DuzySpace v3.0.0-ALPHA - IDs File
 # ----------------------------------------
 worlds:
 ############# YOUR ID'S HERE:
@@ -6,6 +6,7 @@ worlds:
     # Example ID - totally empty (to simulate the old empty generator with the new one)
     empty:
         generation:
+            enablespawnplanet: false
             generateplanets: false
             generateasteroids: false
             generatesatellites: false
@@ -18,6 +19,7 @@ worlds:
     # Generate everything
     default:
         generation:
+            enablespawnplanet: true
             generateplanets: true
             generateasteroids: true
             generatesatellites: true

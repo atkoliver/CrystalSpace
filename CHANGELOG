@@ -1,15 +1,18 @@
 v3.0
 -----------------------------------------
-Not yet released, this is an ongoing changelog.
+Updated to Minecraft 1.21 by atkoliver, the new repo owner.
+The plugin will from now focus exclusively on world generation.
 
  (added/modified/removed features)
-    - Support for Spigot 1.9+
+   - Updated to Minecraft 1.21
 
  (fixes)
 
  (code changes)
-    - All Spout features stripped and removed (Spout is dead)
-    - Class reorganization and cleanup (classes once present may no longer exist)
+    - New README.md, new CONTRIBUTING.md
+    - Updated from maven to gradle
+    - Added debug scripts to make contribution easier
+    - Removed all features unrelated to world-generation (e.g. space suits, suffocation, "blackholes")
 
 v2.5
 -----------------------------------------

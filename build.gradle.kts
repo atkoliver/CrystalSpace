@@ -23,9 +23,9 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 }
 
-group = "com.crystalcraftmc.crystalspace"
+group = "com.atkoliver.duzyspace"
 version = "1.21.11"
-description = "CrystalSpace"
+description = "DuzySpace"
 
 publishing {
     publications.create<MavenPublication>("maven") {
