@@ -9,10 +9,11 @@
 // Package Declaration
 package com.atkoliver.duzyspace.wgen.planets;
 
-import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * Holder class for an individual planetoid.
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 public class Planetoid implements Serializable {
     // Variables
     private static final long serialVersionUID = 1L;
-    public ArrayList<Material> coreBlkIds;
-    public ArrayList<Material> shellBlkIds;
+    public ArrayList<BlockData> coreBlkIds;
+    public ArrayList<BlockData> shellBlkIds;
     public int shellThickness;
     public int radius;
     public int xPos;
@@ -40,15 +41,15 @@ public class Planetoid implements Serializable {
     /**
      * Constructor of Planetoid.
      * 
-     * @param coreID Core material
-     * @param shellID Shell material
+     * @param coreID Core blockdata
+     * @param shellID Shell blockdata
      * @param shellThick Shell thickness
      * @param radius Radius
      * @param x X-coord
      * @param y Y-coord
      * @param z Z-coord
      */
-    public Planetoid(ArrayList<Material> coreID, ArrayList<Material> shellID, int shellThick, int radius, int x, int y, int z) {
+    public Planetoid(ArrayList<BlockData> coreID, ArrayList<BlockData> shellID, int shellThick, int radius, int x, int y, int z) {
         this.coreBlkIds = coreID;
         this.shellBlkIds = shellID;
         this.shellThickness = shellThick;

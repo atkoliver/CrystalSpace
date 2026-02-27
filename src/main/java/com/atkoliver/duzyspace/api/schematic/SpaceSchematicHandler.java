@@ -68,8 +68,8 @@ public class SpaceSchematicHandler {
      * @param tileEntitiesMap Tile Entities Map
      */
     private static void buildSchematic(Location origin, 
-            Map<Location, Map<Material, BlockData>> blocksMap, 
-            Map<BlockVector, Map<String, Tag>> tileEntitiesMap) {
+        Map<Location, Map<Material, BlockData>> blocksMap, 
+        Map<BlockVector, Map<String, Tag>> tileEntitiesMap) {
         
         // Variables
         MessageHandler.debugPrint(Level.INFO, "Inside buildSchematic with origin location: '" + origin.toString() + "'.");
@@ -81,11 +81,19 @@ public class SpaceSchematicHandler {
             int originY = origin.getBlockY() + location.getBlockY();
             int originZ = origin.getBlockZ() + location.getBlockZ();
 
+            //TODO!! Fix this! Read the blockdata, not the generic material.
+            // Why is it a Map<Material, Blockdata>?
+            // Compare with original code
             for (Material material : blocksMap.get(location).keySet()) {
                 Block block = world.getBlockAt(originX, originY, originZ);
                 block.setType(material);
                 block.setBlockData(blocksMap.get(location).get(material));
             }
+            //for (Material material : blocksMap.get(location).keySet()) {
+            //    bdata = ???
+            //    Block block = world.getBlockAt(originX, originY, originZ);
+            //    block.setType(bdata);
+            //}
         }
     }
     

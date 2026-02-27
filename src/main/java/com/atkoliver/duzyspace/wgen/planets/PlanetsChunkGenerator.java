@@ -17,6 +17,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
@@ -40,8 +42,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class PlanetsChunkGenerator extends ChunkGenerator {
     // Variables
     //TODO: Evaluate deletion. Find out why settings are defined twice (once here, once at the bottom of this file)
-    private Map<ArrayList<Material>, Float> shellBlocklists;
-    private Map<ArrayList<Material>, Float> coreBlocklists;
+    private Map<ArrayList<BlockData>, Float> shellBlocklists;
+    private Map<ArrayList<BlockData>, Float> coreBlocklists;
     private int density = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("density", (Integer) SpaceConfig.Defaults.DENSITY.getDefault()); // Number of planetoids it will try to create per
     private int minDistance = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("minDistance", (Integer) SpaceConfig.Defaults.MIN_DISTANCE.getDefault()); // Minimum distance between planets, in blocks
     private int minSize = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getInt("minSize", (Integer) SpaceConfig.Defaults.MIN_SIZE.getDefault()); // Minimum radius
@@ -128,7 +130,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         if (GENERATE) {
             MessageHandler.debugPrint(Level.INFO, "GENERATE == true, generating planet");
             generatePlanetoids(worldInfo, chunkX, chunkZ);
-            Material mat;
+            BlockData bdata;
             // Go through the current system's planetoids and fill in this chunk as needed.
             for (Planetoid curPl : planets.get(worldInfo)) {
                 // Find planet's center point relative to this chunk.
@@ -162,15 +164,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                                         yShell = true;
                                     }
                                     if (xShell || zShell || yShell) {
-                                        mat = getRandomMaterial(random, curPl.shellBlkIds);
+                                        bdata = getRandomBlockdata(random, curPl.shellBlkIds);
                                     } else {
-                                        mat = getRandomMaterial(random, curPl.coreBlkIds);
+                                        bdata = getRandomBlockdata(random, curPl.coreBlkIds);
                                     }
-                                    if (mat != null) { //TODO: Evaluate deletion of this check. mat should never be null
+                                    if (ignoreInvalidBlockIds == false || bdata != null) {
                                         //SpaceDataPopulator.addCoords(worldInfo, chunkX, chunkZ, worldX, worldY, worldZ, mat);
-                                        if (mat.isBlock() || ignoreInvalidBlockIds == false) {
-                                            chunkData.setBlock(relativeX, worldY, relativeZ, mat);
-                                        }
+                                        chunkData.setBlock(relativeX, worldY, relativeZ, bdata);
                                     }
                                 }
                             }
@@ -199,11 +199,12 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     private void generateSpawnPlanet(WorldInfo worldInfo){
         // Generate a log/leaf planet close to 0,0
         Planetoid spawnPl = new Planetoid();
-        spawnPl.coreBlkIds = new ArrayList<Material>();
-        spawnPl.coreBlkIds.add(Material.GRASS_BLOCK); //33% Grass, 66% Log
-        spawnPl.coreBlkIds.add(Material.OAK_LOG); spawnPl.coreBlkIds.add(Material.OAK_LOG);
-        spawnPl.shellBlkIds = new ArrayList<Material>();
-        spawnPl.shellBlkIds.add(Material.OAK_LEAVES);
+        spawnPl.coreBlkIds = new ArrayList<BlockData>();
+        spawnPl.coreBlkIds.add(Material.GRASS_BLOCK.createBlockData()); //33% Grass, 66% Log
+        spawnPl.coreBlkIds.add(Material.OAK_LOG.createBlockData()); spawnPl.coreBlkIds.add(Material.OAK_LOG.createBlockData());
+        spawnPl.shellBlkIds = new ArrayList<BlockData>();
+        Leaves oak_leaves = (Leaves) Material.OAK_LEAVES.createBlockData(); oak_leaves.setPersistent(true);
+        spawnPl.shellBlkIds.add(oak_leaves);
         spawnPl.shellThickness = 4;
         spawnPl.radius = 7;
         spawnPl.xPos = spawnPl.radius;
@@ -336,25 +337,25 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private HashMap<ArrayList<Material>, Float> getBlocklistChances(List<String> readList){
-        HashMap<ArrayList<Material>, Float> blocklistChances = new HashMap<ArrayList<Material>, Float>();
+    private HashMap<ArrayList<BlockData>, Float> getBlocklistChances(List<String> readList){
+        HashMap<ArrayList<BlockData>, Float> blocklistChances = new HashMap<ArrayList<BlockData>, Float>();
         for (String s : readList) {
             String[] sSplit = s.replaceAll("\\s","").split("-");
             String[] mats = sSplit[0].split(",");
-            ArrayList<Material> matList = makeBlocklist(mats);
+            ArrayList<BlockData> bdList = makeBlocklist(mats);
             float probability;
             if (sSplit.length == 2) {
                 probability = Float.valueOf(sSplit[1]);
             } else {
                 probability = 1.0f;
             }
-            blocklistChances.put(matList, probability);
+            blocklistChances.put(bdList, probability);
         }
         return blocklistChances;
     }
 
-    private ArrayList<Material> makeBlocklist(String[] mats) {
-        ArrayList<Material> matList = new ArrayList<Material>();
+    private ArrayList<BlockData> makeBlocklist(String[] mats) {
+        ArrayList<BlockData> bdList = new ArrayList<BlockData>();
         for (String s : mats) {
             String name = "";
             if(s.split(":").length == 2){
@@ -365,26 +366,30 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             }
             MessageHandler.debugPrint(Level.INFO, "Trying to match material with name: " + name);
             Material newMat = Material.matchMaterial(name);
-
             if(newMat != null) {
-                if (newMat.isBlock()) { //Vanilla block
-                    matList.add(newMat);
-                }
-                else if (ignoreInvalidBlockIds) { //If true: we accept unknown blocks (typo or modded) 
-                    matList.add(newMat);
+                if (ignoreInvalidBlockIds || newMat.isBlock()) { //If ignoreInvalid: we accept unknown blocks (typo or modded)
+                    BlockData newBd = newMat.createBlockData();
+                    if (Leaves.class.isInstance(newBd)){ // If Leaves
+                        Leaves newLeaves = (Leaves) newBd;
+                        newLeaves.setPersistent(true); //Otherwise, leaves disappear
+                        bdList.add(newLeaves);
+                    }
+                    else {
+                        bdList.add(newBd);
+                    }
                 }
                 else { // Bad block! Probably a typo
-                    MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
+                    MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml (Not vanilla. Error can be ignored by setting ignoreInvalidBlockIds=true)");
                 }
             }
             else { 
-                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml");
+                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml (Null error)");
             }
         }
-        if (matList.size() == 0) {
-            matList.add(Material.AIR);
+        if (bdList.size() == 0) {
+            bdList.add(Material.AIR.createBlockData());
         }
-        return matList;
+        return bdList;
     }
 
     /*
@@ -410,71 +415,28 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * 
      * @return Material
      */
-    private Material getRandomMaterial(Random random, ArrayList<Material> blocks) {
+    private BlockData getRandomBlockdata(Random random, ArrayList<BlockData> blocks) {
         return blocks.get(random.nextInt(blocks.size()));
     }
 
-    private ArrayList<Material> getRandomCoreBlocks(Random rand) {
-        return getRandomBlockList(rand, coreBlocklists);
+    private ArrayList<BlockData> getRandomCoreBlocks(Random rand) {
+        return getRandomBlockdataList(rand, coreBlocklists);
     }
 
-    private ArrayList<Material> getRandomShellBlocks(Random rand) {
-        return getRandomBlockList(rand, shellBlocklists);
+    private ArrayList<BlockData> getRandomShellBlocks(Random rand) {
+        return getRandomBlockdataList(rand, shellBlocklists);
     }
 
-    private ArrayList<Material> getRandomBlockList(Random rand, Map<ArrayList<Material>, Float> possibleBlockSets) {
+    private ArrayList<BlockData> getRandomBlockdataList(Random rand, Map<ArrayList<BlockData>, Float> possibleBlockSets) {
         while(true){ // Run until a list is selected
             //Select a random list
-            ArrayList<Material> blockList = new ArrayList<ArrayList<Material>>(possibleBlockSets.keySet()).get(rand.nextInt(possibleBlockSets.size()));
+            ArrayList<BlockData> blockList = new ArrayList<ArrayList<BlockData>>(possibleBlockSets.keySet()).get(rand.nextInt(possibleBlockSets.size()));
             //Check if blocks's probability (float) is higher than random number (float)
             if (possibleBlockSets.get(blockList) > rand.nextFloat()) {
                 return blockList;
             }
         }
     }
-
-    /*TODO: Delete after checking getBlockTypes() new version works.
-    Old
-    private ArrayList<Material> getBlockTypes(Random rand, boolean core) {
-        ArrayList<Material> retVal = null;
-        Map<ArrayList<Material>, Float> refMap;
-        if (core) {
-            refMap = coreBlocklists;
-        } else {
-            refMap = shellBlocklists;
-        }
-        outer:
-        while (retVal == null) {
-            ArrayList<Material> dataList = new ArrayList<ArrayList<Material>>(refMap.keySet()).get(rand.nextInt(refMap.size()));
-            float testVal = rand.nextFloat();
-            if (refMap.get(dataList) > testVal) {
-                retVal = dataList;
-                //'noHeat' was an argument to this function.
-                //It was used to remove fire-y blocks if the shell contained wool.
-                //Removed as an undocumented and obstructive behavior. (some people may WANT wool planet that burn themselves)
-                //Can the code below be repurposed, or should it just be deleted? 
-                for (Material mat : dataList) {
-                  //if (noHeat) {
-                    if (true) {
-                        if(mat == null){//Not a Vanilla Material. Don't care.
-                            continue;
-                        }
-                        switch (mat) {
-                            case BURNING_FURNACE:
-                            case FIRE:
-                            case GLOWSTONE:
-                            case JACK_O_LANTERN:
-                            case STATIONARY_LAVA:
-                                retVal = null;//Try again
-                                continue outer;
-                            default:
-                        }
-                    }
-                }
-            }
-        }
-        return retVal;
-    } */
 
     @Override
     public Location getFixedSpawnLocation(World world, Random random) {

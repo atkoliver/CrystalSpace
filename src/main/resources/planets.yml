@@ -12,7 +12,7 @@ debugging: false
 # As this goes up, so does the potential number of planets
 density: 1000
 minDistance: 100
-floorBlock: STATIONARY_WATER
+floorBlock: WATER
 # Alter this value if you want a floor
 floorHeight: 0
 # Sets the layer y=0 to bedrock, if a floor is used

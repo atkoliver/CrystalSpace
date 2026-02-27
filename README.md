@@ -6,6 +6,9 @@
 * Everything can be easiely customized via config files
 * Dependent on [Multiverse](https://mvplugins.org/core/) (or a similiar plugin) to actually generate a world with DuzySpace.
 
+To generate a world using Multiverse, run the following command:
+```mv create SPACE_WORLD_NAME normal -g DuzySpace```
+
 [! SPAAAAAAACE!!](README-image.jpeg)
 
 Short history of Plugin:
