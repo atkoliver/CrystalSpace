@@ -1,12 +1,3 @@
-# DuzySpace v3.0.0-ALPHA - Default Planet Generation Configuration File
-# ----------------------------------------------------- 
-#            This configuration has a pretty                   
-#           huge amount of documentation, but                  
-#          if you still have questions, please                 
-#                ask on BukkitDev! Thanks.              
-# Remember, these settings affect all space worlds with 
-# planet generation turned on!
-
 # Send console messages to help with troubleshooting
 debugging: false
 # As this goes up, so does the potential number of planets
@@ -28,10 +19,10 @@ maxShellSize: 20
 # All have the option of having a set probability or not
 # Data values are optional
 # Can be in the following formats:
-#   - STONE-0.5 *SINGLE NAME, WITH 50% PROBABILITY
+#   - STONE-0.2 *SINGLE NAME, WITH 20% PROBABILITY OF BEING PICKED
 #   - STONE,DIRT-1.0 *MULTIPLE NAMES, WITH 100% PROBABILITY
-#   - STONE,STONE,STONE,DIRT-1.0 *75% BLOCKS STONE, 25% BLOCKS DIRT, with 100% PROBABILITY
-#   - EXOSUPERBLOCK-1.0 *NOT A VANILLA BLOCK, IF ignoreInvalidBlockIds TRUE, IT WILL BE IGNORED
+#   - STONE,STONE,STONE,DIRT-1.0 *75% STONE BLOCKS, 25% DIRT BLOCKS, with 100% PROBABILITY
+#   - EXOSUPERBLOCK-1.0 *NOT A VANILLA BLOCK. IF ignoreInvalidBlockIds TRUE, THIS WILL BE IGNORED
 blocks:
     # 1.0 is 100% chance; 0.0 is 0% chance
     # Planet shells

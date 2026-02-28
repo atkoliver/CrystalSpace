@@ -1,0 +1,16 @@
+debugging: false
+density: 0
+minDistance: 1000
+floorBlock: WATER
+floorHeight: 0
+bedrockEnabled: false
+ignoreInvalidBlockIds: false
+minSize: 1
+maxSize: 1
+minShellSize: 1
+maxShellSize: 1
+blocks:
+    # Planet shells
+    shells:
+    # Planet cores
+    cores:

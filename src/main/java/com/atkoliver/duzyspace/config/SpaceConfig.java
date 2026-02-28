@@ -173,7 +173,7 @@ public class SpaceConfig {
     public enum ConfigFile {
         // Enums
 
-        DEFAULT_PLANETS("planets.yml", "planets/planets.yml"),
+        DEFAULT_PLANETS("default.yml", "planets/default.yml"),
         WORLD_IDS("worlds.yml", "worlds.yml"),
         LANG("lang.yml", "lang.yml");
         // Variables
@@ -234,7 +234,7 @@ public class SpaceConfig {
         MAX_SHELL_SIZE(5),
         MIN_SHELL_SIZE(3),
         FLOOR_HEIGHT(0),
-        FLOOR_BLOCK("STATIONARY_WATER"),
+        FLOOR_BLOCK("WATER"),
         BEDROCK_ENABLED(true),
         IGNORE_INVALID_BLOCK_IDS(true);
         // Variables

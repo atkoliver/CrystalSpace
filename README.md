@@ -1,13 +1,14 @@
-<<<<<<< HEAD
 ### DuzySpace World Generator 
 
 **DuzySpace** is a world-generator plugin.
-* Space-themed server worlds filled with randomly-generated planets and asteroids
-* Everything can be easiely customized via config files
+* Space-themed worlds filled with randomly-generated planets and asteroids
+* Easiely customizable by editing config files
 * Dependent on [Multiverse](https://mvplugins.org/core/) (or a similiar plugin) to actually generate a world with DuzySpace.
 
-To generate a world using Multiverse, run the following command:
-```mv create SPACE_WORLD_NAME normal -g DuzySpace```
+To generate a world with Multiverse, run this:
+```mv create SPACE_WORLD_NAME normal -g DuzySpace:default```
+To teleport to the world, run this:
+```mv teleport SPACE_WORLD_NAME```
 
 [! SPAAAAAAACE!!](README-image.jpeg)
 

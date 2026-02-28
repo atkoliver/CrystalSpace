@@ -17,7 +17,7 @@ The plugin will from now focus exclusively on world generation.
 v2.5
 -----------------------------------------
  (added/modified/removed features)
-    - planets.yml can have multiple blocks in the core or shell. Separate blocks are separated with comma
+    - defaultplanets.yml can have multiple blocks in the core or shell. Separate blocks are separated with comma
 
  (fixes)
 
@@ -57,7 +57,7 @@ v2.2
     - Added permission node bSpace.ignore.* to make the player immune to all bullshit that might occur (currently only suit checks & black holes)
     - Added a config setting for black hole texture
     - Removed mob spawning settings (they should be handled by your world manager)
-    - Damage/data values can now be in planets.yml cores & shells
+    - Damage/data values can now be in defaultplanets.yml cores & shells
     - Reorganized the Pail tab (TODO: Economy settings in there)
     - Black holes are not generated within 2 chunks of 0,0
     - When getting sucked into a black hole, player looks around randomly instead of the epilepsy inducing forced one

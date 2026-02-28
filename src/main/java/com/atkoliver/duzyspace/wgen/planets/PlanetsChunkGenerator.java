@@ -64,20 +64,15 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * @param id ID
      */
     public PlanetsChunkGenerator(String id) {
-        this(id, ConfigHandler.getGeneratePlanets(id));
-    }
-
-    /**
-     * Constructor of PlanetsChunkGenerator 2.
-     * 
-     * @param id ID
-     * @param generate ?
-     */
-    public PlanetsChunkGenerator(String id, boolean generate) {
         this.ID = id.toLowerCase();
-        this.GENERATE = generate;
-        loadPossibleBlocks();
         loadPlanetSettings();
+        loadPossibleBlocks();
+        if (shellBlocklists.isEmpty() || coreBlocklists.isEmpty()) {
+            this.GENERATE = false;
+        }
+        else {
+            this.GENERATE = true;
+        }
     }
 
     /**
@@ -207,9 +202,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         spawnPl.shellBlkIds.add(oak_leaves);
         spawnPl.shellThickness = 4;
         spawnPl.radius = 7;
-        spawnPl.xPos = spawnPl.radius;
-        spawnPl.yPos = 64+spawnPl.radius;
-        spawnPl.zPos = spawnPl.radius;
+        spawnPl.xPos = 0;
+        spawnPl.yPos = 96;
+        spawnPl.zPos = 0;
         planets.get(worldInfo).add(spawnPl);
     }
 
@@ -379,11 +374,11 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     }
                 }
                 else { // Bad block! Probably a typo
-                    MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml (Not vanilla. Error can be ignored by setting ignoreInvalidBlockIds=true)");
+                    MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in defaultplanets.yml (Not vanilla. Error can be ignored by setting ignoreInvalidBlockIds=true)");
                 }
             }
             else { 
-                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in planets.yml (Null error)");
+                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in defaultplanets.yml (Null error)");
             }
         }
         if (bdList.size() == 0) {
@@ -411,7 +406,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
      * Returns a valid block type.
      * 
      * @param random
-     * @param blocks From 'planets.yml'. Example: "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
+     * @param blocks From 'defaultplanets.yml'. Example: "STONE,COBBLESTONE,DIRT,DIRT,DIRT-1.0".
      * 
      * @return Material
      */
@@ -441,7 +436,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     @Override
     public Location getFixedSpawnLocation(World world, Random random) {
         // TODO: figure out if it's our fault or MV's fault that this is not used...
-        return new Location(world, 7, 79, 7);
+        return new Location(world, 0, 106, 0);
     }
     
     private final int HASH_SHIFT = 19;

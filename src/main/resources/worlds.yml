@@ -1,31 +1,20 @@
-# DuzySpace v3.0.0-ALPHA - IDs File
-# ----------------------------------------
+#Custom world generation parameters
 worlds:
-############# YOUR ID'S HERE:
-    # TODO: Documentation for configs! (new and up-to-date ones that is)
-    # Example ID - totally empty (to simulate the old empty generator with the new one)
-    empty:
+    # A world named "example" will use these parameters:
+    example:
         generation:
-            enablespawnplanet: false
-            generateplanets: false
-            generateasteroids: false
-            generatesatellites: false
-            generatefloor: false
-            generateschematics: false
-            glowstonechance: 1
-            stonechance: 3
-            satellitechance: 1
-            schematicchance: 5
-    # Generate everything
+            planetsfile: empty.yml
+            enablespawnplanet: true
+            glowstonechance: 0
+            stonechance: 0
+            satellitechance: 100
+            schematicchance: 0
+    # Default generator:
     default:
         generation:
+            planetsfile: defaultplanets.yml
             enablespawnplanet: true
-            generateplanets: true
-            generateasteroids: true
-            generatesatellites: true
-            generatefloor: true
-            generateschematics: true
-            glowstonechance: 1
-            stonechance: 3
+            glowstonechance: 2
+            stonechance: 4
             satellitechance: 1
-            schematicchance: 5
+            schematicchance: 1
