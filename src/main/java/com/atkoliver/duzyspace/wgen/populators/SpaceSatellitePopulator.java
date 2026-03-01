@@ -37,8 +37,8 @@ public class SpaceSatellitePopulator extends BlockPopulator {
      */
     @Override
     public void populate(World world, Random random, Chunk source) {
-        String id = ConfigHandler.getID(world);
-        if (random.nextInt() <= ConfigHandler.getSatelliteChance(id)) {
+        String worldname = world.getName();
+        if (random.nextInt() <= ConfigHandler.getSatelliteChance(worldname)) {
             int height = random.nextInt(world.getMaxHeight());
             buildSatellite(world, height, source);
         }

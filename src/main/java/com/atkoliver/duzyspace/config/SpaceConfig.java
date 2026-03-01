@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2016 CrystalCraftMC
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-// Package Declaration
 package com.atkoliver.duzyspace.config;
 
 import com.atkoliver.duzyspace.api.schematic.SpaceSchematicHandler;
@@ -173,7 +164,7 @@ public class SpaceConfig {
     public enum ConfigFile {
         // Enums
 
-        DEFAULT_PLANETS("default.yml", "planets/default.yml"),
+        DEFAULT_PLANETS("defaultplanets.yml", "planets/defaultplanets.yml"),
         WORLD_IDS("worlds.yml", "worlds.yml"),
         LANG("lang.yml", "lang.yml");
         // Variables

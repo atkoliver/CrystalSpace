@@ -19,16 +19,6 @@ import org.bukkit.World;
  * @author Jack
  */
 public class WorldHandler extends SpaceWorldHandler {
-    /**
-     * Removes a space world from the list of space worlds.
-     * 
-     * @param world World to remove
-     */
-    public static void removeSpaceWorld(World world) {
-        if (spaceWorldNames.contains(world.getName())) {
-            spaceWorldNames.remove(world.getName());
-        }
-    }
     private WorldHandler() {
     }
 }

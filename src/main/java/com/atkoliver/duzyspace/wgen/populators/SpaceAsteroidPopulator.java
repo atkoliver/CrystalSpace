@@ -40,12 +40,12 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
      */
     @Override
     public void populate(World world, Random random, Chunk source) {
-        String id = ConfigHandler.getID(world);
+        String worldname = world.getName();
         for (int i = 0; i < 2; i++) {
-            if (random.nextInt(200) <= ConfigHandler.getStoneChance(id)) {
+            if (random.nextInt(200) <= ConfigHandler.getStoneChance(worldname)) {
                 generateAsteroid(Material.STONE, random, source);
             }
-            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(id)) {
+            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(worldname)) {
                 generateAsteroid(Material.GLOWSTONE, random, source);
             }
         }

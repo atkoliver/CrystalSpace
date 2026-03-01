@@ -133,19 +133,21 @@ public class SpaceWorldHandler {
         }
     }
 
-    public static String getID(World world) {
-        if (world != null && world.getGenerator() != null && world.getGenerator() instanceof PlanetsChunkGenerator) {
-            return ((PlanetsChunkGenerator) world.getGenerator()).getID();
+    public static void addSpaceWorld(String worldName) {
+        if (!spaceWorldNames.contains(worldName)) {
+            spaceWorldNames.add(worldName);
         }
-        return "planets";
     }
 
-    public static void addSpaceWorld(String worldName) {
-        if (spaceWorldNames.contains(worldName)) return; // Not adding if it already exists
-        spaceWorldNames.add(worldName);
-        World world = Bukkit.getWorld(worldName);
-        if(world == null) return;
-        String id = ConfigHandler.getID(world);
+    /**
+     * Removes a space world from the list of space worlds.
+     * 
+     * @param world World to remove
+     */
+    public static void removeSpaceWorld(World world) {
+        if (spaceWorldNames.contains(world.getName())) {
+            spaceWorldNames.remove(world.getName());
+        }
     }
 
     protected SpaceWorldHandler() {

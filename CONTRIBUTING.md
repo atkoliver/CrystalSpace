@@ -18,7 +18,7 @@ Before you make a pull request, check:
 * Test your code on a live server, and then fix the bugs!
   --> You're the plumber and lord of your own commit. 
 
-* If you're happy about your code, add yourself to the credits :D
+* If you're happy about your code, add yourself to the credits!
   --> How To Credit: Add your name to the authors list in 'plugin.yml' & add an `@author` JavaDocs of the modified class
 
 

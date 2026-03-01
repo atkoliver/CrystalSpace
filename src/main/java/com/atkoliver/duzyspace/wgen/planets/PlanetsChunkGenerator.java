@@ -55,16 +55,16 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     private boolean bedrockEnabled = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("bedrockEnabled", (Boolean) SpaceConfig.Defaults.BEDROCK_ENABLED.getDefault()); // Bedrock layer at y=0
     private boolean ignoreInvalidBlockIds = SpaceConfig.getConfig(SpaceConfig.ConfigFile.DEFAULT_PLANETS).getBoolean("ignoreInvalidBlockIds", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault()); // Ignore invalid block ids, i.e. typos and modded block ids
     private static HashMap<WorldInfo, List<Planetoid>> planets = new HashMap<WorldInfo, List<Planetoid>>();
-    private final String ID;
+    private final String WORLDNAME;
     private final boolean GENERATE;
 
     /**
      * Constructor of PlanetsChunkGenerator.
      * 
-     * @param id ID
+     * @param String worldName
      */
-    public PlanetsChunkGenerator(String id) {
-        this.ID = id.toLowerCase();
+    public PlanetsChunkGenerator(String worldName) {
+        this.WORLDNAME = worldName;
         loadPlanetSettings();
         loadPossibleBlocks();
         if (shellBlocklists.isEmpty() || coreBlocklists.isEmpty()) {
@@ -76,12 +76,12 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Get ID of PlanetsChunkGenerator
+     * Get Worldname of PlanetsChunkGenerator
      * 
-     * @return id ID
+     * @return String worldname
      */
-    public String getID(){
-        return this.ID;
+    public String getWorldName(){
+        return this.WORLDNAME;
     }
 
     /**
@@ -190,7 +190,6 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
         return chunkData;
     }
 
-    //TODO: Add toggle option in worlds.yml. Allow custom planet settings
     private void generateSpawnPlanet(WorldInfo worldInfo){
         // Generate a log/leaf planet close to 0,0
         Planetoid spawnPl = new Planetoid();
@@ -227,7 +226,7 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
 //            seed = -seed;
 //        }
 
-        if (ConfigHandler.getSpawnPlanetEnabled(getID())) {
+        if (ConfigHandler.getSpawnPlanetEnabled(this.WORLDNAME)) {
             //TODO: Test if there's a custom starting planet config
             // if (customStarterPlanet) {
             //      generateSpawnPlanet(worldInfo, customPlanetParameters)
@@ -295,13 +294,13 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         ArrayList<BlockPopulator> populators = new ArrayList<BlockPopulator>();
-        if (ConfigHandler.getSatellitesEnabled(ID)) {
+        if (ConfigHandler.getSatellitesEnabled(this.WORLDNAME)) {
             populators.add(new SpaceSatellitePopulator());
         }
-        if (ConfigHandler.getAsteroidsEnabled(ID)) {
+        if (ConfigHandler.getAsteroidsEnabled(this.WORLDNAME)) {
             populators.add(new SpaceAsteroidPopulator());
         }
-        if (ConfigHandler.getGenerateSchematics(ID)) {
+        if (ConfigHandler.getGenerateSchematics(this.WORLDNAME)) {
             populators.add(new SpaceSchematicPopulator());
         }
         //populators.add(new SpaceDataPopulator());
@@ -374,11 +373,11 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
                     }
                 }
                 else { // Bad block! Probably a typo
-                    MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in defaultplanets.yml (Not vanilla. Error can be ignored by setting ignoreInvalidBlockIds=true)");
+                    MessageHandler.print(Level.WARNING, "Unrecognized block ID (" + name + ") in planets file (Not vanilla. Error can be ignored by setting ignoreInvalidBlockIds=true)");
                 }
             }
             else { 
-                MessageHandler.print(Level.WARNING, "Unrecognized id (" + name + ") in defaultplanets.yml (Null error)");
+                MessageHandler.print(Level.WARNING, "Unrecognized block ID (" + name + ") in planets file (Null error)");
             }
         }
         if (bdList.size() == 0) {
@@ -471,10 +470,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
     }
 
     private void loadPlanetSettings() {
-        if(ID.equals("planets")) return;
         try {
             YamlConfiguration config = new YamlConfiguration();
-            config.load(new File(Bukkit.getPluginManager().getPlugin("DuzySpace").getDataFolder(), "planets/" + ConfigHandler.getPlanetsFile(ID)));
+            config.load(new File(Bukkit.getPluginManager().getPlugin("DuzySpace").getDataFolder(), "planets/" + ConfigHandler.getPlanetsFile(this.WORLDNAME)));
 
             density = config.getInt("density", (Integer) SpaceConfig.Defaults.DENSITY.getDefault()); // Number of planetoids it will try to create per
             minDistance = config.getInt("minDistance", (Integer) SpaceConfig.Defaults.MIN_DISTANCE.getDefault()); // Minimum distance between planets, in blocks
@@ -487,9 +485,9 @@ public class PlanetsChunkGenerator extends ChunkGenerator {
             bedrockEnabled = config.getBoolean("bedrockEnabled", (Boolean) SpaceConfig.Defaults.BEDROCK_ENABLED.getDefault()); // Bedrock layer at y=0
             ignoreInvalidBlockIds = config.getBoolean("ignoreInvalidBlockIds", (Boolean) SpaceConfig.Defaults.IGNORE_INVALID_BLOCK_IDS.getDefault()); // Ignore invalid block ids, i.e. typos and modded block ids
         } catch (IOException ex) {
-            MessageHandler.debugPrint(Level.WARNING, "IOException when getting info for planets file for id "+ ID);
+            MessageHandler.debugPrint(Level.WARNING, "IOException when getting info for planets file for world "+ this.WORLDNAME);
         } catch (InvalidConfigurationException ex) {
-            MessageHandler.debugPrint(Level.WARNING, "InvalidConfigurationException when getting info for planets file for id "+ ID);
+            MessageHandler.debugPrint(Level.WARNING, "InvalidConfigurationException when getting info for planets file for world "+ this.WORLDNAME);
         } 
     }
 }

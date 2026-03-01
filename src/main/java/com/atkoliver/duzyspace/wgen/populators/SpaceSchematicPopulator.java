@@ -41,11 +41,11 @@ public class SpaceSchematicPopulator extends BlockPopulator {
             return;
         }
         int y = new Random().nextInt(world.getMaxHeight());
-        String id = ConfigHandler.getID(world);
+        String worldname = world.getName();
         Schematic randomSchematic = SpaceSchematicHandler.getSchematics().get(new Random().nextInt(SpaceSchematicHandler.getSchematics().size()));
         //TODO: Why is this 200? That halves the schematic generation chance.
         //TODO 2: Change these generator chances from integers to floats or something like mmol
-        if (new Random().nextInt(200) <= ConfigHandler.getSchematicChance(id)) {
+        if (new Random().nextInt(200) <= ConfigHandler.getSchematicChance(worldname)) {
             MessageHandler.debugPrint(Level.INFO, "Starting schematic population process with schematic '" + randomSchematic.getName() + "'.");
             SpaceSchematicHandler.placeSchematic(randomSchematic, new Location(world, (chunk.getX() << 4) + new Random().nextInt(10), y, (chunk.getZ() << 4) + new Random().nextInt(10)));
         }

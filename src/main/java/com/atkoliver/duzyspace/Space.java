@@ -121,28 +121,25 @@ public class Space extends JavaPlugin {
     }
 
     /**
-     * Gets the default world generator of the plugin.
+     * Gets a world generator from the plugin.
      *
      * @param worldName World name
-     * @param id ID World id inside multiverse ("spaceworld", "test2", "Sirius", etc...)
      *
      * @return ChunkGenerator to use
      */
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        boolean realID = (id == null || id.isEmpty() || id.length() == 0) ? false : true;
-        if (realID) {
-            MessageHandler.debugPrint(Level.INFO, "Getting generator for '" + worldName + "' using id: '" + id + "'");
-        } else {
-            MessageHandler.debugPrint(Level.INFO, "Getting generator for '" + worldName + "' using default id,planets.");
-        }
+        MessageHandler.debugPrint(Level.INFO, "Getting generator for '" + worldName + "' using default id,planets.");
+
         WorldHandler.checkWorld(worldName);
 
-        //TODO Check if id is in worlds.yml
+        //Check if world name has a custom id
         //if (!realID || !idHasCustomGenerator(id)) {
-        if (!realID) {
-            return new PlanetsChunkGenerator("planets");
+        if (ConfigHandler.worldHasCustomGenerator(worldName)) {
+            return new PlanetsChunkGenerator(worldName);
         }
-        return new PlanetsChunkGenerator(id);
+        else {
+            return new PlanetsChunkGenerator("defaultplanets");
+        }
     }
 }
