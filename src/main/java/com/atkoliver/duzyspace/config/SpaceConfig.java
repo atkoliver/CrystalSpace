@@ -1,6 +1,7 @@
 package com.atkoliver.duzyspace.config;
 
 import com.atkoliver.duzyspace.api.schematic.SpaceSchematicHandler;
+import com.atkoliver.duzyspace.config.SpaceConfig.ConfigFile;
 import com.atkoliver.duzyspace.handlers.LangHandler;
 import com.atkoliver.duzyspace.handlers.MessageHandler;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import java.util.logging.Level;
  * @author Pandarr
  * @author Sammy
  * @author kitskub
+ * @author atkoliver
  */
 public class SpaceConfig {
     // Variables
@@ -99,14 +101,7 @@ public class SpaceConfig {
             }
             loaded.put(configFile, true);
         } else {
-            try {
-                // Making schematics folder
-                File makeSchematics = new File(Bukkit.getServer().getPluginManager().getPlugin("DuzySpace").getDataFolder() + File.separator + "schematics");
-                if (!makeSchematics.exists()) {
-                    makeSchematics.mkdirs();
-                }
-                
-                Bukkit.getServer().getPluginManager().getPlugin("DuzySpace").getDataFolder().mkdir();
+            try {                
                 Bukkit.getServer().getPluginManager().getPlugin("DuzySpace").getDataFolder().mkdir();
                 fileMap.get(configFile).getParentFile().mkdir();
                 if(!fileMap.get(configFile).exists()) fileMap.get(configFile).createNewFile();
@@ -163,7 +158,7 @@ public class SpaceConfig {
      */
     public enum ConfigFile {
         // Enums
-
+        EMPTY_PLANETS("empty.yml", "planets/empty.yml"),
         DEFAULT_PLANETS("defaultplanets.yml", "planets/defaultplanets.yml"),
         WORLD_IDS("worlds.yml", "worlds.yml"),
         LANG("lang.yml", "lang.yml");

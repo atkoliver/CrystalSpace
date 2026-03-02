@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2016 CrystalCraftMC
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-// Package Declaration
 package com.atkoliver.duzyspace.wgen.populators;
 
 import com.atkoliver.duzyspace.handlers.ConfigHandler;
@@ -22,6 +13,7 @@ import java.util.Random;
  * 
  * @author iffa
  * @author NeonMaster (thanks for the original satellite design, too bad my mathematics blew it up!)
+ * @author atkoliver
  */
 
 //TODO: Evaluate removal (bloat)
@@ -52,6 +44,7 @@ public class SpaceSatellitePopulator extends BlockPopulator {
      * @param source Source chunk
      */
     //TODO: Replace this code with a schematic. That will highlight schematic creation too, and intro users to make their own schematics.
+    //TODO: Actually do this. Right now, these satellites spawn inside planets and eat asteroids
     private void buildSatellite(World world, int height, Chunk source) {
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 3; y++) {

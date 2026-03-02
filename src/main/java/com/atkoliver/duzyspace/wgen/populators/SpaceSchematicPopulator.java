@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2016 CrystalCraftMC
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-// Package Declaration
 package com.atkoliver.duzyspace.wgen.populators;
 
 import com.atkoliver.duzyspace.api.schematic.Schematic;
@@ -25,6 +16,7 @@ import java.util.logging.Level;
  * Populates a world with schematics.
  * 
  * @author iffa
+ * @author atkoliver
  */
 public class SpaceSchematicPopulator extends BlockPopulator {
 

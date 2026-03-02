@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2016 CrystalCraftMC
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 package com.atkoliver.duzyspace.wgen.populators;
 
 import org.bukkit.generator.WorldInfo;
+
+import com.atkoliver.duzyspace.wgen.populators.SpaceDataPopulator.WrappedCoords;
+
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.Material;
@@ -26,6 +21,7 @@ import java.util.Random;
 /**
  *
  * @author kitskub
+ * @author atkoliver
  */
 public class SpaceDataPopulator extends BlockPopulator {
     public static Map<WorldInfo, Map<WrappedCoords, Material>> coords = new HashMap<WorldInfo, Map<WrappedCoords, Material>>();

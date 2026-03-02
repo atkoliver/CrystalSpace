@@ -3,7 +3,7 @@
 
 name: DuzySpace
 main: com.atkoliver.duzyspace.Space
-version: 3.1.0
+version: 3.2.0
 api-version: '1.21'
 authors: [kitskub, iffa, SwearWord, HACKhalo2, Canis85, BR, jflory7, Jacc734, Jwood9198, atkoliver ]
 website: https://github.com/atkoliver/DuzySpace

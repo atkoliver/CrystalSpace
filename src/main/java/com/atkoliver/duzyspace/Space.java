@@ -139,7 +139,7 @@ public class Space extends JavaPlugin {
             return new PlanetsChunkGenerator(worldName);
         }
         else {
-            return new PlanetsChunkGenerator("defaultplanets");
+            return new PlanetsChunkGenerator("default");
         }
     }
 }

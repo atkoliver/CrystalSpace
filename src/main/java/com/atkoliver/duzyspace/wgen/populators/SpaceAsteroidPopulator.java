@@ -26,6 +26,7 @@ import java.util.Random;
  * @author iffa
  * @author Nightgunner5
  * @author kitskub
+ * @author atkoliver
  */
 public class SpaceAsteroidPopulator extends BlockPopulator {
     // Variables
@@ -40,12 +41,12 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
      */
     @Override
     public void populate(World world, Random random, Chunk source) {
-        String worldname = world.getName();
+        String worldName = world.getName();
         for (int i = 0; i < 2; i++) {
-            if (random.nextInt(200) <= ConfigHandler.getStoneChance(worldname)) {
+            if (random.nextInt(200) <= ConfigHandler.getStoneChance(worldName)) {
                 generateAsteroid(Material.STONE, random, source);
             }
-            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(worldname)) {
+            if (random.nextInt(200) <= ConfigHandler.getGlowstoneChance(worldName)) {
                 generateAsteroid(Material.GLOWSTONE, random, source);
             }
         }
@@ -59,11 +60,11 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
      * @param source Source chunk
      */
     private void generateAsteroid(Material material, Random random, Chunk source) {
-        //Try 15 times to find an air block until giving up
-        for (int i = 0; i < 15; i++) { 
+        //Try 20 times to find an air block before giving up
+        for (int i = 0; i < 20; i++) { 
             Block block = getRandomBlock(random, source);
             if (block.getType() == Material.AIR) {
-                block.setType(Material.STONE);
+                block.setType(material);
                 for (int j = 0; j < 1500; j++) {
                     Block current = block.getRelative(random.nextInt(8) - random.nextInt(8),
                             random.nextInt(12),
@@ -73,15 +74,15 @@ public class SpaceAsteroidPopulator extends BlockPopulator {
                     }
                     int count = 0;
                     for (BlockFace face : faces) {
-                        if (current.getRelative(face).getType() == Material.STONE) {
+                        if (current.getRelative(face).getType() == material) {
                             count++;
                         }
                     }
                     if (count == 1) {
-                        current.setType(Material.STONE);
+                        current.setType(material);
                     }
                 }
-                return; //made asteroid. be happy!
+                return; //asteroid created
             }
         }
     }

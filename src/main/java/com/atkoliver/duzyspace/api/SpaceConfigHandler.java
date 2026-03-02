@@ -5,6 +5,7 @@ import com.atkoliver.duzyspace.config.SpaceConfig.ConfigFile;
 import com.atkoliver.duzyspace.handlers.WorldHandler;
 import org.bukkit.World;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Static methods handle configuration.
@@ -18,13 +19,8 @@ import org.bukkit.World;
 public class SpaceConfigHandler {
 
     public static boolean worldHasCustomGenerator(String worldName){
-        String a = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getString("worlds.default");
-        String b = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getString("worlds.example");
-        String c = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).getString("worlds.doesntexist");
-        Boolean d = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).contains("worlds.default");
-        Boolean e = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).contains("worlds.example");
-        Boolean f = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).contains("worlds.doesntexist");
-        if (a != null) {
+        Boolean worldConfigExists = SpaceConfig.getConfig(ConfigFile.WORLD_IDS).contains("worlds."+worldName);
+        if (worldConfigExists) {
             return true;
         } else return false;
     }
