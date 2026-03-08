@@ -1,11 +1,4 @@
 ### DuzySpace World Generator 
-<p align="center">
-<img src="config/multiverse-banner.png" alt="Duzsyspace Logo">
-</p>
-[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/plugin/multiverse-core)
-[![Hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/hangar_vector.svg)](https://hangar.papermc.io/Multiverse/Multiverse-Core)
-[![Bukkit](https://raw.githubusercontent.com/intergrav/devins-badges/refs/heads/v3/assets/cozy/available/bukkit_vector.svg)](https://dev.bukkit.org/projects/multiverse-core)
-[![Spigot](https://raw.githubusercontent.com/intergrav/devins-badges/refs/heads/v3/assets/cozy/available/spigot_vector.svg)](https://www.spigotmc.org/resources/multiverse-core.390/)
 
 **DuzySpace** is a world-generator plugin.
 * Space-themed worlds filled with randomly-generated planets and asteroids
@@ -17,10 +10,6 @@ To generate a world with Multiverse, run this:
 To teleport to the world, run this:
 ```mv teleport SPACE_WORLD_NAME```
 You can edit world generation for your world by adding its name into worlds.yml. See comments in worlds.yml and defaultplanets.yml for documentation.
-
-<p align="center">
-<img src="README-image.jpeg" alt="SPAAAAAAACE!">
-</p>
 
 Short history of Plugin:
 * 2011: iffa spawns 'styxspace'
